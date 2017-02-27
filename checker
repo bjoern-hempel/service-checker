@@ -1,0 +1,84 @@
+#!/bin/bash
+
+# include the libraries
+source 'lib/all'
+
+# initial values
+ip=''
+portsPositive=()
+portsNegative=()
+
+# declare parameter list array
+PARAMETERS=()
+
+# read arguments
+while [[ $# > 0 ]]; do
+  case "$1" in
+    #
+    # ip
+    #
+    -i|--ip)
+      ip="$2"
+      shift
+    ;;
+    -i=*|--ip=*)
+      ip="${1#*=}"
+    ;;
+
+    #
+    # port positive
+    #
+    -pp|-p+|--portPositive)
+      portsPositive+=("$2")
+      shift
+    ;;
+    -pp=*|-p+=*|--portNegative=*)
+      portsPositive+=("${1#*=}")
+    ;;
+
+    #
+    # port negative
+    #
+    -pn|-p-|--portNegative)
+      portsNegative+=("$2")
+      shift
+    ;;
+    -pn=*|-p-=*|--portNegative=*)
+      portsNegative+=("${1#*=}")
+    ;;
+
+    #
+    # collect these unknown parameters
+    #
+    *)
+      PARAMETERS+=("$1")
+    ;;
+  esac
+  shift
+done
+
+# check if server is running
+if isPingable "$ip"; then
+    log 'success' "The system with ip $ip is running"
+else
+    log 'error' "The system with ip $ip is not pingable"
+fi
+
+# check positive ports
+for port in "${portsPositive[@]}"; do
+    if isPortOpen "$ip" "$port"; then
+        log 'success' "The port \"$port\" on system with ip \"$ip\" is open."
+    else
+        log 'error' "The port \"$port\" on system with ip \"$ip\" is not open."
+    fi
+done
+
+# check negative ports
+for port in "${portsNegative[@]}"; do
+    if ! isPortOpen "$ip" "$port"; then
+        log 'success' "The port \"$port\" on system with ip \"$ip\" is closed."
+    else
+        log 'error' "The port \"$port\" on system with ip \"$ip\" is not closed."
+    fi
+done
+
