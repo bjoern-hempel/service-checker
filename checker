@@ -15,17 +15,6 @@ PARAMETERS=()
 while [[ $# > 0 ]]; do
   case "$1" in
     #
-    # ip
-    #
-    -i|--ip)
-      ip="$2"
-      shift
-    ;;
-    -i=*|--ip=*)
-      ip="${1#*=}"
-    ;;
-
-    #
     # port positive
     #
     -pp|-p+|--portPositive)
@@ -56,6 +45,15 @@ while [[ $# > 0 ]]; do
   esac
   shift
 done
+
+# check ip parameter
+if [ ${#PARAMETERS[@]} -lt 1 ]; then
+    log 'error' "No server host name or ip address is given"
+    exit
+fi
+
+# save the ip address
+ip="${PARAMETERS[0]}"
 
 # check if server is running
 if isPingable "$ip"; then
