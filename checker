@@ -56,27 +56,47 @@ fi
 ip="${PARAMETERS[0]}"
 
 # check if server is running
-if isPingable "$ip"; then
-    log 'success' "The system with ip $ip is running"
+if isPingableCheck "$ip"; then
+    pingable=true
 else
-    log 'error' "The system with ip $ip is not pingable"
+    pingable=false
 fi
 
 # check positive ports
 for port in "${portsPositive[@]}"; do
-    if isPortOpen "$ip" "$port"; then
-        log 'success' "The port \"$port\" on system with ip \"$ip\" is open."
+    if isPortOpenCheck "$ip" "$port"; then
+        portOpen=true
     else
-        log 'error' "The port \"$port\" on system with ip \"$ip\" is not open."
+        portOpen=false
     fi
 done
 
 # check negative ports
 for port in "${portsNegative[@]}"; do
-    if ! isPortOpen "$ip" "$port"; then
-        log 'success' "The port \"$port\" on system with ip \"$ip\" is closed."
+    if isPortNotOpenCheck "$ip" "$port"; then
+        portNotOpen=true
     else
-        log 'error' "The port \"$port\" on system with ip \"$ip\" is not closed."
+        portNotOpen=false
     fi
 done
+
+url="https://expo.apo-ident.hiperscan.rsm-service.de"
+expectedStatusCode="401"
+if isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
+    httpStatusCodeCheck=true
+else
+    httpStatusCodeCheck=false
+fi
+
+url="https://expo.apo-ident.hiperscan.rsm-service.de"
+expectedStatusCode="402"
+if isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
+    httpStatusCodeCheck=true
+else
+    httpStatusCodeCheck=false
+fi
+
+
+
+
 
