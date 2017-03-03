@@ -55,48 +55,46 @@ fi
 # save the ip address
 ip="${PARAMETERS[0]}"
 
+allPassed=true
+
 # check if server is running
 if isPingableCheck "$ip"; then
     pingable=true
 else
-    pingable=false
+    allPassed=false
 fi
 
 # check positive ports
 for port in "${portsPositive[@]}"; do
-    if isPortOpenCheck "$ip" "$port"; then
-        portOpen=true
-    else
-        portOpen=false
+    if ! isPortOpenCheck "$ip" "$port"; then
+        allPassed=false
     fi
 done
 
 # check negative ports
 for port in "${portsNegative[@]}"; do
-    if isPortNotOpenCheck "$ip" "$port"; then
-        portNotOpen=true
-    else
-        portNotOpen=false
+    if ! isPortNotOpenCheck "$ip" "$port"; then
+        allPassed=false
     fi
 done
 
 url="https://expo.apo-ident.hiperscan.rsm-service.de"
 expectedStatusCode="401"
-if isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
-    httpStatusCodeCheck=true
-else
-    httpStatusCodeCheck=false
+if ! isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
+    allPassed=false
 fi
 
-url="https://expo.apo-ident.hiperscan.rsm-service.de"
-expectedStatusCode="402"
-if isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
-    httpStatusCodeCheck=true
+#url="https://expo.apo-ident.hiperscan.rsm-service.de"
+#expectedStatusCode="402"
+#if ! isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
+#    allPassed=false
+#fi
+
+
+if $allPassed; then
+    log "passed" "All checks passed."
 else
-    httpStatusCodeCheck=false
+    log "failed" "At least one check is not passed."
 fi
-
-
-
 
 
