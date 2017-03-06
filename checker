@@ -7,9 +7,12 @@ source 'lib/all'
 ip=''
 portsPositive=()
 portsNegative=()
+sslCheck=()
 
 # declare parameter list array
 PARAMETERS=()
+
+currentDomain=""
 
 # read arguments
 while [[ $# > 0 ]]; do
@@ -37,6 +40,29 @@ while [[ $# > 0 ]]; do
     ;;
 
     #
+    # domain name
+    #
+    -dn|--domainName)
+        currentDomain="$2"
+        shift
+    ;;
+    -dn=*|--domainName=*)
+        currentDomain="${1#*=}"
+    ;;
+
+    #
+    # ssl
+    #
+    -ssl)
+        if [ "$currentDomain" == "" ]; then
+            log 'error' "Please specifiy the domain name (-dn) first, before use -ssl option."
+            exit
+        fi
+
+        sslCheck+=("$currentDomain")
+    ;;
+
+    #
     # collect these unknown parameters
     #
     *)
@@ -45,6 +71,8 @@ while [[ $# > 0 ]]; do
   esac
   shift
 done
+
+echo $currentDomain
 
 # check ip parameter
 if [ ${#PARAMETERS[@]} -lt 1 ]; then
@@ -73,24 +101,79 @@ done
 
 # check negative ports
 for port in "${portsNegative[@]}"; do
-    if ! isPortNotOpenCheck "$ip" "$port"; then
+    if ! isNotPortOpenCheck "$ip" "$port"; then
         allPassed=false
     fi
 done
 
+domain='expo.apo-ident.hiperscan.rsm-service.de'
+
+# check if domain is assigned to this server
+if ! isDomainAssignedToIpCheck "$domain" "$ip"; then
+    allPassed=false
+fi
+
+# check http to https redirection
+url="http://expo.apo-ident.hiperscan.rsm-service.de"
+expectedStatusCode="301"
+if ! isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
+    allPassed=false
+fi
+
+# check password protection (request without authentication)
 url="https://expo.apo-ident.hiperscan.rsm-service.de"
 expectedStatusCode="401"
 if ! isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
     allPassed=false
 fi
 
-#url="https://expo.apo-ident.hiperscan.rsm-service.de"
-#expectedStatusCode="402"
-#if ! isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
-#    allPassed=false
-#fi
+# check password protection (request with authentication)
+url="https://rsm:rsm2017@expo.apo-ident.hiperscan.rsm-service.de"
+expectedStatusCode="200"
+if ! isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
+    allPassed=false
+fi
 
+#domain="www.500landinitiativen.de"
+#domain="www.awarion.rsm-service.de"
+#domain="live.haustierportal.bmel.rsm-development.de"
+#domain="app.ppdash.ddhome.rsm-development.de"
+for domain in "${sslCheck[@]}"; do
+    certFile="/tmp/$domain.crt"
+    chainfile="/tmp/$domain.ca"
 
+    # get and save domain cert
+    cert=$(getDomainCert "$domain")
+    echo "$cert" > "$certFile"
+
+    # get the issuer from domain cert
+    issuer=$(getIssuer "$domain")
+
+    # get and save the issuer certificate
+    certChain=$(getChainCertificate "$domain")
+  
+    if [ "$certChain" == "" ]; then 
+        log 'failed' "No chain certificate returned."
+        allPassed=false
+    else
+        echo "$certChain" > "$chainfile"
+
+        # check the certificates
+        if ! isCertificateValid "$certFile" "$chainfile" "$domain"; then
+            allPassed=false
+        fi
+        if ! isChainCertificateValid "$chainfile" "$issuer"; then
+            allPassed=false
+        fi
+
+        # gets the status
+        if ! isStatusOcspOk "$domain" "$chainfile" "$certFile"; then
+            allPassed=false
+        fi
+    fi
+done
+
+# print all check status
 if $allPassed; then
     log "passed" "All checks passed."
 else
