@@ -8,11 +8,15 @@ ip=''
 portsPositive=()
 portsNegative=()
 sslCheck=()
+declare -A aRecords
+declare -A mxRecords
+declare -A statusCodeCheck
 
 # declare parameter list array
 PARAMETERS=()
 
 currentDomain=""
+currentCredentials=""
 
 # read arguments
 while [[ $# > 0 ]]; do
@@ -39,15 +43,38 @@ while [[ $# > 0 ]]; do
       portsNegative+=("${1#*=}")
     ;;
 
+    -sc)
+        statusCodeCheck["http://$currentCredentials$currentDomain"]="$2"
+        shift
+    ;;
+
+    -ssc)
+        statusCodeCheck["https://$currentCredentials$currentDomain"]="$2"
+        shift
+    ;;
+
     #
     # domain name
     #
     -dn|--domainName)
         currentDomain="$2"
+        aRecords[$currentDomain]=true
         shift
     ;;
     -dn=*|--domainName=*)
         currentDomain="${1#*=}"
+        aRecords[$currentDomain]=true
+    ;;
+
+    #
+    # credentials
+    #
+    -cre|--credential)
+        currentCredentials="$2@"
+        shift
+    ;;
+    -cre=*|--credential=*)
+        currentCredentials="${1#*=}@"
     ;;
 
     #
@@ -71,8 +98,6 @@ while [[ $# > 0 ]]; do
   esac
   shift
 done
-
-echo $currentDomain
 
 # check ip parameter
 if [ ${#PARAMETERS[@]} -lt 1 ]; then
@@ -106,38 +131,23 @@ for port in "${portsNegative[@]}"; do
     fi
 done
 
-domain='expo.apo-ident.hiperscan.rsm-service.de'
+# a record check
+for domain in "${!aRecords[@]}"; do
+    if ! isDomainAssignedToIpCheck "$domain" "$ip"; then
+        allPassed=false
+    fi
+done
 
-# check if domain is assigned to this server
-if ! isDomainAssignedToIpCheck "$domain" "$ip"; then
-    allPassed=false
-fi
+# status code check
+for url in "${!statusCodeCheck[@]}"; do
+    expected="${statusCodeCheck[$url]}"
 
-# check http to https redirection
-url="http://expo.apo-ident.hiperscan.rsm-service.de"
-expectedStatusCode="301"
-if ! isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
-    allPassed=false
-fi
+    if ! isHttpStatusCodeCheck "$url" "$expected"; then
+        allPassed=false
+    fi
+done
 
-# check password protection (request without authentication)
-url="https://expo.apo-ident.hiperscan.rsm-service.de"
-expectedStatusCode="401"
-if ! isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
-    allPassed=false
-fi
-
-# check password protection (request with authentication)
-url="https://rsm:rsm2017@expo.apo-ident.hiperscan.rsm-service.de"
-expectedStatusCode="200"
-if ! isHttpStatusCodeCheck "$url" "$expectedStatusCode"; then
-    allPassed=false
-fi
-
-#domain="www.500landinitiativen.de"
-#domain="www.awarion.rsm-service.de"
-#domain="live.haustierportal.bmel.rsm-development.de"
-#domain="app.ppdash.ddhome.rsm-development.de"
+# ssl check
 for domain in "${sslCheck[@]}"; do
     certFile="/tmp/$domain.crt"
     chainfile="/tmp/$domain.ca"
