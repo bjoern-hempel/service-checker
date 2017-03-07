@@ -43,16 +43,15 @@ while [[ $# > 0 ]]; do
       portsNegative+=("${1#*=}")
     ;;
 
+    # -sc,   --status-code                      Checks that a given url returns an expected status code (http:80). Needs a -dn option before.
     #
-    # status code check (http:80)
-    #
-    # current domain: domain.tld
-    #
-    # -sc 301                            # http://domain.tld                           > 301
-    # -sc >                              # http://domain.tld                           > 301
-    # -sc 301|https://domain.tld         # http://domain.tld                           > 301 with target https://domain.tld
-    # -sc >https                         # http://(domain.tld)                         > 301 with target https://$1
-    # -sc >/redirect/home.html           # http://(domain.tld)                         > 301 with target http://$1/redirect/home.html
+    #        option (-dn domain.tld)            url check                                     expected return
+    #        -------------------------------------------------------------------------------------------------------------------------------------
+    #        -sc 301                            http://domain.tld                             301
+    #        -sc >                              http://domain.tld                             301
+    #        -sc 301|https://domain.tld         http://domain.tld                             301 with target https://domain.tld
+    #        -sc >https                         http://(domain.tld)                           301 with target https://$1
+    #        -sc >/redirect/home.html           http://(domain.tld)                           301 with target http://$1/redirect/home.html
     #
     -sc|--status-code)
         statusCodeCheck["http://$currentCredentials$currentDomain"]="$2"
@@ -62,21 +61,21 @@ while [[ $# > 0 ]]; do
         statusCodeCheck["http://$currentCredentials$currentDomain"]="${1#*=}"
     ;;
 
+    # -ssc,  --secure-status-code               Checks that a given url returns an expected status code (https:443). Needs a -dn option before.
     #
-    # secure status code check (https:443)
+    #        option (-dn domain.tld)            url check                                     expected return
+    #        -------------------------------------------------------------------------------------------------------------------------------------
+    #        -ssc 401                           https://domain.tld                            401 (password protection)
+    #        -ssc user:pass@200                 https://user:pass@domain.tld                  200
+    #        -cre user:pass                     >> set credentials for the following checks
+    #        -ssc 200                           https://user:pass@domain.tld                  200
+    #        -ssc user:wrongpass@401            https://user:wrongpass@domain.tld             401
+    #        -cre-                              >> remove credentials
+    #        -ssc 401                           https://domain.tld                            401 (password protection)
+    #        -ssc user:pass@404:/server-status  https://user:pass@domain.tld/server-status    404
+    #        -ssc 404:/nonexisting.html         https://domain.tld/nonexisting.html           404
     #
-    # current domain: domain.tld
-    #
-    # -ssc 401                           # https://domain.tld                          > 401 (password protection)
-    # -ssc user:pass@200                 # https://user:pass@domain.tld                > 200
-    # -cre user:pass                     # set credentials for the following checks
-    # -ssc 200                           # https://user:pass@domain.tld                > 200
-    # -cre-                              # remove credentials
-    # -ssc 401                           # https://domain.tld                          > (password protection)
-    # -ssc user:pass@404:/server-status  # https://user:pass@domain.tld/server-status  > 404
-    # -ssc 404:/nonexisting.html         # https://domain.tld/nonexisting.html         > 404
-    #
-    -ssc)
+    -ssc|--secure-status-code)
         statusCodeCheck["https://$currentCredentials$currentDomain"]="$2"
         shift
     ;;
@@ -84,8 +83,7 @@ while [[ $# > 0 ]]; do
         statusCodeCheck["https://$currentCredentials$currentDomain"]="${1#*=}"
     ;;
 
-    #
-    # set domain name
+    # -dn,   --set-domainname                   Sets the current domain name. With this set domain name other commands can be combined.
     #
     -dn|--domainname)
         currentDomain="$2"
@@ -97,8 +95,7 @@ while [[ $# > 0 ]]; do
         aRecords[$currentDomain]=true
     ;;
 
-    #
-    # set web server credentials
+    # -cre,  --set-credenial                    Sets the current webserver credentials. With this set credentials other commands can be combined.
     #
     -cre|--credential)
         currentCredentials="$2@"
@@ -108,8 +105,7 @@ while [[ $# > 0 ]]; do
         currentCredentials="${1#*=}@"
     ;;
 
-    #
-    # ssl certificate check
+    # -ssl,  --check-ssl-certificate            Checks the ssl certificate. Needs a -dn option before.
     #
     -ssl)
         if [ "$currentDomain" == "" ]; then
