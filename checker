@@ -24,50 +24,81 @@ while [[ $# > 0 ]]; do
     #
     # port positive
     #
-    -pp|-p+|--portPositive)
+    -pp|-p+|--port-positive)
       portsPositive+=("$2")
       shift
     ;;
-    -pp=*|-p+=*|--portNegative=*)
+    -pp=*|-p+=*|--port-positive=*)
       portsPositive+=("${1#*=}")
     ;;
 
     #
     # port negative
     #
-    -pn|-p-|--portNegative)
+    -pn|-p-|--port-negative)
       portsNegative+=("$2")
       shift
     ;;
-    -pn=*|-p-=*|--portNegative=*)
+    -pn=*|-p-=*|--port-negative=*)
       portsNegative+=("${1#*=}")
     ;;
 
-    -sc)
+    #
+    # status code check (http:80)
+    #
+    # current domain: domain.tld
+    #
+    # -sc 301                            # http://domain.tld                           > 301
+    # -sc >                              # http://domain.tld                           > 301
+    # -sc 301|https://domain.tld         # http://domain.tld                           > 301 with target https://domain.tld
+    # -sc >https                         # http://(domain.tld)                         > 301 with target https://$1
+    # -sc >/redirect/home.html           # http://(domain.tld)                         > 301 with target http://$1/redirect/home.html
+    #
+    -sc|--status-code)
         statusCodeCheck["http://$currentCredentials$currentDomain"]="$2"
         shift
     ;;
+    -sc=*|--status-code=*)
+        statusCodeCheck["http://$currentCredentials$currentDomain"]="${1#*=}"
+    ;;
 
+    #
+    # secure status code check (https:443)
+    #
+    # current domain: domain.tld
+    #
+    # -ssc 401                           # https://domain.tld                          > 401 (password protection)
+    # -ssc user:pass@200                 # https://user:pass@domain.tld                > 200
+    # -cre user:pass                     # set credentials for the following checks
+    # -ssc 200                           # https://user:pass@domain.tld                > 200
+    # -cre-                              # remove credentials
+    # -ssc 401                           # https://domain.tld                          > (password protection)
+    # -ssc user:pass@404:/server-status  # https://user:pass@domain.tld/server-status  > 404
+    # -ssc 404:/nonexisting.html         # https://domain.tld/nonexisting.html         > 404
+    #
     -ssc)
         statusCodeCheck["https://$currentCredentials$currentDomain"]="$2"
         shift
     ;;
+    -ssc=*|--secure-status-code=*)
+        statusCodeCheck["https://$currentCredentials$currentDomain"]="${1#*=}"
+    ;;
 
     #
-    # domain name
+    # set domain name
     #
-    -dn|--domainName)
+    -dn|--domainname)
         currentDomain="$2"
         aRecords[$currentDomain]=true
         shift
     ;;
-    -dn=*|--domainName=*)
+    -dn=*|--domainname=*)
         currentDomain="${1#*=}"
         aRecords[$currentDomain]=true
     ;;
 
     #
-    # credentials
+    # set web server credentials
     #
     -cre|--credential)
         currentCredentials="$2@"
@@ -78,7 +109,7 @@ while [[ $# > 0 ]]; do
     ;;
 
     #
-    # ssl
+    # ssl certificate check
     #
     -ssl)
         if [ "$currentDomain" == "" ]; then
