@@ -43,15 +43,15 @@ while [[ $# > 0 ]]; do
       portsNegative+=("${1#*=}")
     ;;
 
-    # -sc,   --status-code                      Checks that a given url returns an expected status code (http:80). Needs a -dn option before.
+    # -sc,   --status-code                                     Checks that a given url returns an expected status code (http:80). Needs a -dn option before.
     #
-    #        option (-dn domain.tld)            url check                                     expected return
-    #        -------------------------------------------------------------------------------------------------------------------------------------
-    #        -sc 301                            http://domain.tld                             301
-    #        -sc >                              http://domain.tld                             301
-    #        -sc 301|https://domain.tld         http://domain.tld                             301 with target https://domain.tld
-    #        -sc >https                         http://(domain.tld)                           301 with target https://$1
-    #        -sc >/redirect/home.html           http://(domain.tld)                           301 with target http://$1/redirect/home.html
+    #        option (-dn domain.tld)                           url check                                     expected return
+    #        ---------------------------------------------------------------------------------------------------------------------------------------------------------
+    #        -sc 301                                           http://domain.tld                             301
+    #        -sc >                                             http://domain.tld                             301
+    #        -sc 301|https://domain.tld                        http://domain.tld                             301 with target https://domain.tld
+    #        -sc >https                                        http://(domain.tld)                           301 with target https://$1
+    #        -sc >/redirect/home.html                          http://(domain.tld)                           301 with target http://$1/redirect/home.html
     #
     -sc|--status-code)
         statusCodeCheck["http://$currentCredentials$currentDomain"]="$2"
@@ -61,19 +61,21 @@ while [[ $# > 0 ]]; do
         statusCodeCheck["http://$currentCredentials$currentDomain"]="${1#*=}"
     ;;
 
-    # -ssc,  --secure-status-code               Checks that a given url returns an expected status code (https:443). Needs a -dn option before.
+    # -ssc,  --secure-status-code                              Checks that a given url returns an expected status code (https:443). Needs a -dn option before.
     #
-    #        option (-dn domain.tld)            url check                                     expected return
-    #        -------------------------------------------------------------------------------------------------------------------------------------
-    #        -ssc 401                           https://domain.tld                            401 (password protection)
-    #        -ssc user:pass@200                 https://user:pass@domain.tld                  200
-    #        -cre user:pass                     >> set credentials for the following checks
-    #        -ssc 200                           https://user:pass@domain.tld                  200
-    #        -ssc user:wrongpass@401            https://user:wrongpass@domain.tld             401
-    #        -cre-                              >> remove credentials
-    #        -ssc 401                           https://domain.tld                            401 (password protection)
-    #        -ssc user:pass@404:/server-status  https://user:pass@domain.tld/server-status    404
-    #        -ssc 404:/nonexisting.html         https://domain.tld/nonexisting.html           404
+    #        option (-dn domain.tld)                           url check                                     expected return
+    #        ---------------------------------------------------------------------------------------------------------------------------------------------------------
+    #        -ssc 401                                          https://domain.tld                            401 (password protection)
+    #        -ssc user:pass@200                                https://user:pass@domain.tld                  200
+    #        -cre user:pass                                    >> set credentials for the following checks
+    #        -ssc 200                                          https://user:pass@domain.tld                  200
+    #        -ssc user:wrongpass@401                           https://user:wrongpass@domain.tld             401
+    #        -cre-                                             >> remove credentials
+    #        -ssc 401                                          https://domain.tld                            401 (password protection)
+    #        -ssc user:pass@404:/server-status                 https://user:pass@domain.tld/server-status    404
+    #        -ssc 404:/nonexisting.html                        https://domain.tld/nonexisting.html           404
+    #        -ssc 404,401:/typo3                               https://domain.tld/typo3                      404 or 401
+    #        -ssc 404,401,301|https://typo3.domain.tld:/typo3  https://domain.tld/typo3                      404 or 401 or 301 301 with target https://typo3.domain.tld
     #
     -ssc|--secure-status-code)
         statusCodeCheck["https://$currentCredentials$currentDomain"]="$2"
