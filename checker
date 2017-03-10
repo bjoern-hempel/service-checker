@@ -21,8 +21,8 @@ currentCredentials=""
 # read arguments
 while [[ $# > 0 ]]; do
   case "$1" in
-    #
-    # port positive
+    # -p+,
+    # -pp,   --port-positive           Checks that this given port is opened on the given machine.
     #
     -pp|-p+|--port-positive)
       portsPositive+=("$2")
@@ -32,8 +32,8 @@ while [[ $# > 0 ]]; do
       portsPositive+=("${1#*=}")
     ;;
 
-    #
-    # port negative
+    # -p-,   --port-negative           Checks that this given port is closed on the given machine.
+    # -pn,   -
     #
     -pn|-p-|--port-negative)
       portsNegative+=("$2")
@@ -43,7 +43,7 @@ while [[ $# > 0 ]]; do
       portsNegative+=("${1#*=}")
     ;;
 
-    # -sc,   --status-code                                     Checks that a given url returns an expected status code (http:80). Needs a -dn option before.
+    # -sc,   --status-code             Checks that a given url returns an expected status code (http:80). Needs a -dn option before.
     #
     #        option (-dn domain.tld)                           url check                                     expected return
     #        ---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -61,7 +61,7 @@ while [[ $# > 0 ]]; do
         statusCodeCheck["http://$currentCredentials$currentDomain"]="${1#*=}"
     ;;
 
-    # -ssc,  --secure-status-code                              Checks that a given url returns an expected status code (https:443). Needs a -dn option before.
+    # -ssc,  --secure-status-code      Checks that a given url returns an expected status code (https:443). Needs a -dn option before.
     #
     #        option (-dn domain.tld)                           url check                                     expected return
     #        ---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ while [[ $# > 0 ]]; do
     #        -ssc user:pass@404:/server-status                 https://user:pass@domain.tld/server-status    404
     #        -ssc 404:/nonexisting.html                        https://domain.tld/nonexisting.html           404
     #        -ssc 404,401:/typo3                               https://domain.tld/typo3                      404 or 401
-    #        -ssc 404,401,301|https://typo3.domain.tld:/typo3  https://domain.tld/typo3                      404 or 401 or 301 301 with target https://typo3.domain.tld
+    #        -ssc 404,401,301|https://typo3.domain.tld:/typo3  https://domain.tld/typo3                      404 or 401 or 301 with target https://typo3.domain.tld
     #
     -ssc|--secure-status-code)
         statusCodeCheck["https://$currentCredentials$currentDomain"]="$2"
@@ -85,7 +85,7 @@ while [[ $# > 0 ]]; do
         statusCodeCheck["https://$currentCredentials$currentDomain"]="${1#*=}"
     ;;
 
-    # -dn,   --set-domainname                   Sets the current domain name. With this set domain name other commands can be combined.
+    # -dn,   --set-domainname          Sets the current domain name. With this set domain name other commands can be combined.
     #
     -dn|--domainname)
         currentDomain="$2"
@@ -97,7 +97,7 @@ while [[ $# > 0 ]]; do
         aRecords[$currentDomain]=true
     ;;
 
-    # -cre,  --set-credenial                    Sets the current webserver credentials. With this set credentials other commands can be combined.
+    # -cre,  --set-credenial           Sets the current webserver credentials. With this set credentials other commands can be combined.
     #
     -cre|--credential)
         currentCredentials="$2@"
@@ -107,7 +107,7 @@ while [[ $# > 0 ]]; do
         currentCredentials="${1#*=}@"
     ;;
 
-    # -ssl,  --check-ssl-certificate            Checks the ssl certificate. Needs a -dn option before.
+    # -ssl,  --check-ssl-certificate   Checks the ssl certificate. Needs a -dn option before.
     #
     -ssl)
         if [ "$currentDomain" == "" ]; then
@@ -169,9 +169,15 @@ done
 
 # status code check
 for url in "${!statusCodeCheck[@]}"; do
-    expected="${statusCodeCheck[$url]}"
+    config="${statusCodeCheck[$url]}"
+      auth=$(getIndexFromStringSeparatedBySeparator "$config" "@" 0 2)
+    config=$(getIndexFromStringSeparatedBySeparator "$config" "@" 1 2)
+     ports=$(getIndexFromStringSeparatedBySeparator "$config" ":" 0)
+      path=$(getIndexFromStringSeparatedBySeparator "$config" ":" 1)
 
-    if ! isHttpStatusCodeCheck "$url" "$expected"; then
+    url=$(buildUrl "$url" "$path" "$auth")
+
+    if ! isHttpStatusCodeCheck "$url" "$ports"; then
         allPassed=false
     fi
 done
