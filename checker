@@ -54,11 +54,13 @@ while [[ $# > 0 ]]; do
     #        -sc >/redirect/home.html                          http://(domain.tld)                           301 with target http://$1/redirect/home.html
     #
     -sc|--status-code)
-        statusCodeCheck["http://$currentCredentials$currentDomain"]="$2"
+        read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "$2")
+        statusCodeCheck["$url"]="$ports"
         shift
     ;;
     -sc=*|--status-code=*)
-        statusCodeCheck["http://$currentCredentials$currentDomain"]="${1#*=}"
+        read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "${1#*=}")
+        statusCodeCheck["$url"]="$ports"
     ;;
 
     # -ssc,  --secure-status-code      Checks that a given url returns an expected status code (https:443). Needs a -dn option before.
@@ -78,11 +80,13 @@ while [[ $# > 0 ]]; do
     #        -ssc 404,401,301|https://typo3.domain.tld:/typo3  https://domain.tld/typo3                      404 or 401 or 301 with target https://typo3.domain.tld
     #
     -ssc|--secure-status-code)
-        statusCodeCheck["https://$currentCredentials$currentDomain"]="$2"
+        read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "$2")
+        statusCodeCheck["$url"]="$ports"
         shift
     ;;
     -ssc=*|--secure-status-code=*)
-        statusCodeCheck["https://$currentCredentials$currentDomain"]="${1#*=}"
+        read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "${1#*=}")
+        statusCodeCheck["$url"]="$ports"
     ;;
 
     # -dn,   --set-domainname          Sets the current domain name. With this set domain name other commands can be combined.
@@ -169,13 +173,7 @@ done
 
 # status code check
 for url in "${!statusCodeCheck[@]}"; do
-    config="${statusCodeCheck[$url]}"
-      auth=$(getIndexFromStringSeparatedBySeparator "$config" "@" 0 2)
-    config=$(getIndexFromStringSeparatedBySeparator "$config" "@" 1 2)
-     ports=$(getIndexFromStringSeparatedBySeparator "$config" ":" 0)
-      path=$(getIndexFromStringSeparatedBySeparator "$config" ":" 1)
-
-    url=$(buildUrl "$url" "$path" "$auth")
+    ports="${statusCodeCheck[$url]}"
 
     if ! isHttpStatusCodeCheck "$url" "$ports"; then
         allPassed=false
