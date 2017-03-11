@@ -80,12 +80,12 @@ while [[ $# > 0 ]]; do
     #        -ssc 404,401,301|https://typo3.domain.tld:/typo3  https://domain.tld/typo3                      404 or 401 or 301 with target https://typo3.domain.tld
     #
     -ssc|--secure-status-code)
-        read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "$2")
+        read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "$2")
         statusCodeCheck["$url"]="$ports"
         shift
     ;;
     -ssc=*|--secure-status-code=*)
-        read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "${1#*=}")
+        read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "${1#*=}")
         statusCodeCheck["$url"]="$ports"
     ;;
 
@@ -123,7 +123,7 @@ while [[ $# > 0 ]]; do
     ;;
 
     #
-    # collect these unknown parameters
+    # collect all unknown parameters
     #
     *)
       PARAMETERS+=("$1")
@@ -202,10 +202,13 @@ for domain in "${sslCheck[@]}"; do
         echo "$certChain" > "$chainfile"
 
         # check the certificates
-        if ! isCertificateValid "$certFile" "$chainfile" "$domain"; then
+        if ! isCertificateVerified "$certFile" "$chainfile" "$domain"; then
             allPassed=false
         fi
-        if ! isChainCertificateValid "$chainfile" "$issuer"; then
+        if ! isChainCertificateVerified "$chainfile" "$issuer"; then
+            allPassed=false
+        fi
+        if ! isCertificateValid "$certFile" "$domain"; then
             allPassed=false
         fi
 
