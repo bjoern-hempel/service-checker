@@ -211,6 +211,9 @@ for domain in "${sslCheck[@]}"; do
         if ! isCertificateValid "$certFile" "$domain"; then
             allPassed=false
         fi
+        if ! isDomainFromCertificate "$domain" "$certFile"; then
+            allPassed=false
+        fi
 
         # gets the status
         if ! isStatusOcspOk "$domain" "$chainfile" "$certFile"; then
