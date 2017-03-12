@@ -19,7 +19,9 @@ $ ./checker -p+ 22 -p+ 80 -p+ 443 -p- 3306 138.201.93.253
 Check ip 83.169.16.166; Ports 10022, 80 and 443 must be opened; Ports 3306 and 111 must be closed; inter.apo-ident.de and www.inter.apo-ident.de must be assigned to the ip; Unsecure connections must be redirected to the secure one (https://inter.apo-ident.de); Secure connections must serve a 200 status code; The certificates must be valid
 
 ```
-$ ./checker 83.169.16.166 -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 -dn inter.apo-ident.de -sc 301=https://inter.apo-ident.de -ssc 200 -ssl -dn www.inter.apo-ident.de -sc 404,301=https://inter.apo-ident.de
+$ ./checker 83.169.16.166 -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
+-dn inter.apo-ident.de -sc 301=https://inter.apo-ident.de -ssc 200 -ssl \
+-dn www.inter.apo-ident.de -sc 404,301=https://inter.apo-ident.de
 [2017-03-12 16:43:38] [PASSED‧] The system with ip 83.169.16.166 is running
 [2017-03-12 16:43:38] [PASSED‧] The port "10022" on system with ip "83.169.16.166" is open.
 [2017-03-12 16:43:38] [PASSED‧] The port "80" on system with ip "83.169.16.166" is open.
