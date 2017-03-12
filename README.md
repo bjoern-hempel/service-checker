@@ -8,11 +8,12 @@ Check ip 138.201.93.253, that the ports 22, 80, 443 are opened and the port 3306
 
 ```
 $ ./checker -p+ 22 -p+ 80 -p+ 443 -p- 3306 138.201.93.253
-[2017-02-27 01:09:20] [SUCCESS] The system with ip 138.201.93.253 is running
-[2017-02-27 01:09:20] [SUCCESS] The port "22" on system with ip "138.201.93.253" is open.
-[2017-02-27 01:09:20] [SUCCESS] The port "80" on system with ip "138.201.93.253" is open.
-[2017-02-27 01:09:20] [SUCCESS] The port "443" on system with ip "138.201.93.253" is open.
-[2017-02-27 01:09:20] [SUCCESS] The port "3306" on system with ip "138.201.93.253" is closed.
+[2017-03-12 16:52:42] [PASSED‧] The system with ip 138.201.93.253 is running
+[2017-03-12 16:52:42] [PASSED‧] The port "22" on system with ip "138.201.93.253" is open.
+[2017-03-12 16:52:42] [PASSED‧] The port "80" on system with ip "138.201.93.253" is open.
+[2017-03-12 16:52:42] [PASSED‧] The port "443" on system with ip "138.201.93.253" is open.
+[2017-03-12 16:52:42] [PASSED‧] The port "3306" on system with ip "138.201.93.253" is closed.
+[2017-03-12 16:52:42] [PASSED‧] All checks passed.
 ```
 
 Check ip 83.169.16.166; Ports 10022, 80 and 443 must be opened; Ports 3306 and 111 must be closed; inter.apo-ident.de and www.inter.apo-ident.de must be assigned to the ip; Unsecure connections must be redirected to the secure one (https://inter.apo-ident.de); Secure connections must serve a 200 status code; The certificates must be valid
