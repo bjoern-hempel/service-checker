@@ -1,0 +1,73 @@
+# HIPERSCAN:
+# ----------
+# check 83.169.16.166
+#   - inter.apo-ident.de
+#   - www.inter.apo-ident.de
+#
+hiperscan {
+    name=hiperscan
+    ip=83.169.16.166
+    parameter="\
+        -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
+        -dn inter.apo-ident.de \
+            -sc 301=https://inter.apo-ident.de \
+            -ssc 200 \
+            -ssl \
+        -dn www.inter.apo-ident.de \
+            -sc 404,301=https://inter.apo-ident.de \
+    "
+}
+
+# ECE (facebook):
+# ---------------
+# check 91.250.103.239
+#   - www.ece-fb.de
+#   - ece-fb.de
+#
+eceFacebook {
+    name=eceFacebook
+    ip=91.250.103.239
+    parameter="\
+        -p+ 5122 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
+        -dn ece-fb.de \
+            -sc 301=https://www.ece-fb.de \
+        -dn www.ece-fb.de \
+            -sc 301=https://www.ece-fb.de \
+            -ssc 301=https://www.ece-fb.de/admin/dashboard \
+            -ssc 401:/admin/dashboard \
+            -cre admin:Udababumu480 \
+            -ssc 200:/admin/dashboard \
+            -ssl
+    "
+}
+
+# BMEL:
+# -----
+# check 46.163.114.68
+#   - www.500landinitiativen.de
+#   - 500landinitiativen.de
+#   - www.haustier-berater.de
+#   - haustier-berater.de
+#
+bmel {
+    name=bmel
+    ip=46.163.114.68
+    parameter="\
+        -p+ 22 -p+ 80 -p+ 443 \
+        -dn 500landinitiativen.de \
+            -sc 301 \
+            -ssc 301 \
+        -dn www.500landinitiativen.de \
+            -sc 301 \
+            -ssc 200 \
+            -ssl \
+        -dn haustier-berater.de \
+            -sc 301 \
+            -ssc 301 \
+        -dn www.haustier-berater.de \
+            -sc 301 \
+            -ssc 200 \
+            -ssl \
+    "
+}
+

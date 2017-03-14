@@ -4,9 +4,25 @@
 source 'lib/all'
 source 'parameter'
 
+# some params
+configFile='environments.conf'
+
 # check ip parameter
 if [ ${#PARAMETERS[@]} -lt 1 ]; then
-    log 'error' "No server host name or ip address is given"
+    if [ ! -f "$configFile" ]; then
+        log 'error' "No server host name or ip address is given"
+        exit
+    fi
+
+    cfgParser 'environments.conf' 'environment'
+
+    for environmentFunction in "${environmentFunctions[@]}"; do
+        $environmentFunction
+
+        log 'header' "Check config $name"
+        ./checker $ip $parameter
+    done
+
     exit
 fi
 
