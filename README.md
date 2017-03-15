@@ -95,7 +95,9 @@ $ ./checker 83.169.16.166 -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
 [2017-03-12 16:43:39] [PASSED‧] All checks passed.
 ```
 
-## if environments.conf is set (example environments.conf.dist)
+## if environments.conf is set
+
+You can find an example inside the file environments.conf.dist
 
 ```
 $ ./checker 
