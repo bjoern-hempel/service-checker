@@ -172,4 +172,5 @@ $ ./checker
 [2017-03-15 01:19:00] [PASSED‧] The ocsp is activated on domain "www.haustier-berater.de" ("http://ocsp2.globalsign.com/gsdomainvalsha2g2").
 [2017-03-15 01:19:00] [PASSED‧] All checks passed.
 [2017-03-15 01:19:00] [HEADER‧] RESULT
-[2017-03-15 01:19:00] [PASSED‧] All checks passed```
+[2017-03-15 01:19:00] [PASSED‧] All checks passed
+```
