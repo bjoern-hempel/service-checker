@@ -10,20 +10,36 @@ configFile='environments.conf'
 # check ip parameter
 if [ ${#PARAMETERS[@]} -lt 1 ]; then
     if [ ! -f "$configFile" ]; then
-        log 'error' "No server host name or ip address is given"
+        log 'error' "No server host name or ip address is given and no config file \"$configFile\" was found."
         exit
     fi
 
     cfgParser 'environments.conf' 'environment'
+
+    allPassed=true
 
     for environmentFunction in "${environmentFunctions[@]}"; do
         $environmentFunction
 
         log 'header' "Check config $name"
         ./checker $ip $parameter
+
+        lastStatus=$?
+
+        if [ $lastStatus -gt 0 ]; then
+            allPassed=false
+        fi
     done
 
-    exit
+    if $allPassed; then
+        log 'header' 'Result'
+        log 'passed' 'All checks passed'
+        exit
+    fi
+
+    log 'header' 'Result'
+    log 'failed' 'At least on check is failed'
+    exit 1
 fi
 
 # save the ip address
@@ -113,8 +129,10 @@ done
 # print all check status
 if $allPassed; then
     log "passed" "All checks passed."
-else
-    log "failed" "At least one check is not passed."
+    exit 0
 fi
+
+log "failed" "At least one check is not passed."
+exit 1
 
 
