@@ -1,3 +1,23 @@
+# ECOINTENSE:
+# -----------
+# check 85.214.21.171
+#   - www.ecointense.de
+#   - ecointense.de
+ecointense {
+    name=ecointense
+    ip=85.214.21.171
+    parameter="\
+        -p+ 10022 -p+ 80 -p+ 443 \
+        -dn ecointense.de \
+            -sc 301=https://www.ecointense.de \
+            -ssc 301=https://www.ecointense.de \
+        -dn www.ecointense.de \
+            -sc 301=https://www.ecointense.de \
+            -ssc 200 \
+            -ssl \
+    "
+}
+
 # HIPERSCAN:
 # ----------
 # check 83.169.16.166
@@ -15,6 +35,7 @@ hiperscan {
             -ssl \
         -dn www.inter.apo-ident.de \
             -sc 404,301=https://inter.apo-ident.de \
+            -ssl \
     "
 }
 
