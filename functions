@@ -1,0 +1,136 @@
+#!/bin/bash
+
+#
+# 0 - go on
+# 1 - do not go on (everything okay)
+# 2 - do not go on (error)
+#
+environmentLoader()
+{
+    configFile="$1"
+    shift
+ 
+    if [ $# -gt 0 ]; then
+        return 0
+    fi
+
+    if [ ! -f "$configFile" ]; then
+        log 'error' "No server host name or ip address is given and no config file \"$configFile\" was found."
+        return 2
+    fi
+
+    #echo "o $#"
+    #echo "1 $1"
+    #echo "2 $2"
+
+    cfgParser 'environments.conf' 'environment'
+
+    # some vars
+    declare -A keyToEnvironment
+
+    # build menu
+    local lineTemplate="%2s %-20s %s"
+    local counter=0
+    local environmentList=""
+
+    # build header
+    environmentList+=$(printf "$lineTemplate" 'No' 'Name' 'IP')"\n"
+    environmentList+=$(printf "%48s" | tr " " "-")"\n"
+
+    # all function
+    environment.all() {
+        name='ALL'
+        ip='ALL'
+    }
+
+    # add all option
+    environmentFunctions=(environment.all "${environmentFunctions[@]}")
+    environments=(all "${environments[@]}")
+
+    # collect all environments
+    for environmentFunction in "${environmentFunctions[@]}"; do
+        $environmentFunction
+        ((counter++))
+
+        # build version number
+        [ "$counter" -lt 10 ] && versionNumber=$counter || versionNumber=$(chr $((87 + counter)))
+
+        # cancel loop if the output would be to much
+        [ $counter -gt 34 ] && break
+
+        # save environment call function
+        keyToEnvironment[$versionNumber]="$environmentFunction"
+
+        environmentList+=$(printf "$lineTemplate" "${COLOR_UNDERLINE}$versionNumber${COLOR_NORM})" $name $ip)"\n"
+    done
+
+    # read the input
+    while true; do
+        echo
+        echo -e  "The following system test environments are available:"
+        echo
+        echo -en "$environmentList"
+        echo
+        echo -n  "Choose the environment number you would like to test: "
+        read -n 1 environmentNumber && echo
+
+        if [ "$environmentNumber" == $'\e' ]; then
+            echo
+            log "info" "Switch process was canceled by user."
+            exit
+        elif [ -z "${keyToEnvironment[$environmentNumber]}" ]; then
+            echo && echo -e "${COLOR_RED}The entered version number $environmentNumber does not exist. Try another one.${COLOR_NORM}" && echo
+        else
+            break
+        fi
+    done
+
+    echo 
+
+    environmentFunction="${keyToEnvironment[$environmentNumber]}"
+    allPassed=true
+
+    if [ "$environmentFunction" == "environment.all" ]; then
+        for environmentFunction in "${environmentFunctions[@]}"; do
+            if [ "$environmentFunction" == "environment.all" ]; then
+                continue
+            fi
+
+            $environmentFunction
+
+            log 'header' "Check config $name"
+            ./checker $ip $parameter
+
+            lastStatus=$?
+
+            if [ $lastStatus -gt 0 ]; then
+                allPassed=false
+            fi
+        done
+    else
+        $environmentFunction
+
+        log 'header' "Check config $name"
+        ./checker $ip $parameter
+
+        lastStatus=$?
+
+        if [ $lastStatus -gt 0 ]; then
+            allPassed=false
+        fi
+
+        return 1
+    fi
+
+    if $allPassed; then
+        log 'header' 'Result'
+        log 'passed' 'All checks passed'
+        return 1
+    fi
+
+    log 'header' 'Result'
+    log 'failed' 'At least on check is failed'
+    return 2
+}
+
+
