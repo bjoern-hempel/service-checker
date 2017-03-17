@@ -9,9 +9,40 @@ environmentLoader()
 {
     configFile="$1"
     shift
+
+    cfgParser 'environments.conf' 'environment'
+
+    # declare parameter list array
+    PARAMETERS=()
+
+    # analyse all parameters
+    while [[ $# > 0 ]]; do
+        case "$1" in
+            #
+            # collect all unknown parameters
+            #
+            *)
+                PARAMETERS+=("$1")
+                ;;
+        esac
+        shift
+    done
+
+    local environmentFunction=''
  
-    if [ $# -gt 0 ]; then
-        return 0
+    if [ ${#PARAMETERS[@]} -gt 0 ]; then
+        local environmentFound=false
+
+        for enviro in "${environments[@]}"; do
+            if [ "$enviro" == "${PARAMETERS[0]}" ]; then
+                environmentFound=true
+                environmentFunction="environment.$enviro"
+            fi
+        done
+
+        if ! $environmentFound; then
+            return 0
+        fi
     fi
 
     if [ ! -f "$configFile" ]; then
@@ -19,75 +50,72 @@ environmentLoader()
         return 2
     fi
 
-    #echo "o $#"
-    #echo "1 $1"
-    #echo "2 $2"
+    if [ "$environmentFunction" == "" ]; then
+        # some vars
+        declare -A keyToEnvironment
 
-    cfgParser 'environments.conf' 'environment'
+        # build menu
+        local lineTemplate="%2s %-20s %s"
+        local counter=0
+        local environmentList=""
 
-    # some vars
-    declare -A keyToEnvironment
+        # build header
+        environmentList+=$(printf "$lineTemplate" 'No' 'Name' 'IP')"\n"
+        environmentList+=$(printf "%48s" | tr " " "-")"\n"
 
-    # build menu
-    local lineTemplate="%2s %-20s %s"
-    local counter=0
-    local environmentList=""
+        # all function
+        environment.all() {
+            name='ALL'
+            ip='ALL'
+        }
 
-    # build header
-    environmentList+=$(printf "$lineTemplate" 'No' 'Name' 'IP')"\n"
-    environmentList+=$(printf "%48s" | tr " " "-")"\n"
+        # add all option
+        environmentFunctions=(environment.all "${environmentFunctions[@]}")
+        environments=(all "${environments[@]}")
 
-    # all function
-    environment.all() {
-        name='ALL'
-        ip='ALL'
-    }
+        # collect all environments
+        for environmentFunction in "${environmentFunctions[@]}"; do
+            $environmentFunction
+            ((counter++))
 
-    # add all option
-    environmentFunctions=(environment.all "${environmentFunctions[@]}")
-    environments=(all "${environments[@]}")
+            # build version number
+            [ "$counter" -lt 10 ] && versionNumber=$counter || versionNumber=$(chr $((87 + counter)))
 
-    # collect all environments
-    for environmentFunction in "${environmentFunctions[@]}"; do
-        $environmentFunction
-        ((counter++))
+            # cancel loop if the output would be to much
+            [ $counter -gt 34 ] && break
 
-        # build version number
-        [ "$counter" -lt 10 ] && versionNumber=$counter || versionNumber=$(chr $((87 + counter)))
+            # save environment call function
+            keyToEnvironment[$versionNumber]="$environmentFunction"
 
-        # cancel loop if the output would be to much
-        [ $counter -gt 34 ] && break
+            environmentList+=$(printf "$lineTemplate" "${COLOR_UNDERLINE}$versionNumber${COLOR_NORM})" $name $ip)"\n"
+        done
 
-        # save environment call function
-        keyToEnvironment[$versionNumber]="$environmentFunction"
-
-        environmentList+=$(printf "$lineTemplate" "${COLOR_UNDERLINE}$versionNumber${COLOR_NORM})" $name $ip)"\n"
-    done
-
-    # read the input
-    while true; do
-        echo
-        echo -e  "The following system test environments are available:"
-        echo
-        echo -en "$environmentList"
-        echo
-        echo -n  "Choose the environment number you would like to test: "
-        read -n 1 environmentNumber && echo
-
-        if [ "$environmentNumber" == $'\e' ]; then
+        # read the input
+        while true; do
             echo
-            log "info" "Switch process was canceled by user."
-            exit
-        elif [ -z "${keyToEnvironment[$environmentNumber]}" ]; then
-            echo && echo -e "${COLOR_RED}The entered version number $environmentNumber does not exist. Try another one.${COLOR_NORM}" && echo
-        else
-            break
-        fi
-    done
+            echo -e  "The following system test environments are available:"
+            echo
+            echo -en "$environmentList"
+            echo
+            echo -n  "Choose the environment number you would like to test: "
+            read -n 1 environmentNumber && echo
 
-    echo 
+            if [ "$environmentNumber" == $'\e' ]; then
+                echo
+                log "info" "Switch process was canceled by user."
+                exit
+            elif [ -z "${keyToEnvironment[$environmentNumber]}" ]; then
+                echo && echo -e "${COLOR_RED}The entered version number $environmentNumber does not exist. Try another one.${COLOR_NORM}" && echo
+            else
+                break
+            fi
+        done
 
-    environmentFunction="${keyToEnvironment[$environmentNumber]}"
+        echo 
+
+        environmentFunction="${keyToEnvironment[$environmentNumber]}"
+    fi
+
     allPassed=true
 
     if [ "$environmentFunction" == "environment.all" ]; then
