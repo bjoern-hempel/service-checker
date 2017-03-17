@@ -10,21 +10,8 @@ environmentLoader()
     configFile="$1"
     shift
 
-    # declare parameter list array
-    PARAMETERS=()
-
-    # analyse all parameters
-    while [[ $# > 0 ]]; do
-        case "$1" in
-            #
-            # collect all unknown parameters
-            #
-            *)
-                PARAMETERS+=("$1")
-                ;;
-        esac
-        shift
-    done
+    # parse parameter
+    source 'parameter'
 
     local environmentFunction=''
  
@@ -33,6 +20,16 @@ environmentLoader()
             local environmentFound=false
 
             cfgParser 'environments.conf' 'environment'
+
+            # all function
+            environment.all() {
+                name='ALL'
+                ip='ALL'
+            }
+
+            # add all option
+            environmentFunctions=(environment.all "${environmentFunctions[@]}")
+            environments=(all "${environments[@]}")
 
             for enviro in "${environments[@]}"; do
                 if [ "$enviro" == "${PARAMETERS[0]}" ]; then
