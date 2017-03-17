@@ -10,8 +10,6 @@ environmentLoader()
     configFile="$1"
     shift
 
-    cfgParser 'environments.conf' 'environment'
-
     # declare parameter list array
     PARAMETERS=()
 
@@ -31,16 +29,22 @@ environmentLoader()
     local environmentFunction=''
  
     if [ ${#PARAMETERS[@]} -gt 0 ]; then
-        local environmentFound=false
+        if [ -f "$configFile" ]; then
+            local environmentFound=false
 
-        for enviro in "${environments[@]}"; do
-            if [ "$enviro" == "${PARAMETERS[0]}" ]; then
-                environmentFound=true
-                environmentFunction="environment.$enviro"
+            cfgParser 'environments.conf' 'environment'
+
+            for enviro in "${environments[@]}"; do
+                if [ "$enviro" == "${PARAMETERS[0]}" ]; then
+                    environmentFound=true
+                    environmentFunction="environment.$enviro"
+                fi
+            done
+
+            if ! $environmentFound; then
+                return 0
             fi
-        done
-
-        if ! $environmentFound; then
+        else
             return 0
         fi
     fi
@@ -51,6 +55,8 @@ environmentLoader()
     fi
 
     if [ "$environmentFunction" == "" ]; then
+        cfgParser 'environments.conf' 'environment'
+
         # some vars
         declare -A keyToEnvironment
 
