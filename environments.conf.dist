@@ -6,15 +6,15 @@
 ecointense {
     name=ecointense
     ip=85.214.21.171
-    parameter="\
-        -p+ 10022 -p+ 80 -p+ 443 \
-        -dn ecointense.de \
-            -sc 301=https://www.ecointense.de \
-            -ssc 301=https://www.ecointense.de \
-        -dn www.ecointense.de \
-            -sc 301=https://www.ecointense.de \
-            -ssc 200 \
-            -ssl \
+    parameter="
+        -p+ 10022 -p+ 80 -p+ 443
+        -dn ecointense.de
+            -sc 301=https://www.ecointense.de
+            -ssc 301=https://www.ecointense.de
+        -dn www.ecointense.de
+            -sc 301=https://www.ecointense.de
+            -ssc 200
+            -ssl
     "
 }
 
@@ -27,15 +27,30 @@ ecointense {
 hiperscan {
     name=hiperscan
     ip=83.169.16.166
-    parameter="\
-        -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
-        -dn inter.apo-ident.de \
-            -sc 301=https://inter.apo-ident.de \
-            -ssc 200 \
-            -ssl \
-        -dn www.inter.apo-ident.de \
-            -sc 404,301=https://inter.apo-ident.de \
-            -ssl \
+    parameter="
+        -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111
+        -dn inter.apo-ident.de
+            -sc 301=https://inter.apo-ident.de
+            -ssc 200
+            -ssl
+        -dn www.inter.apo-ident.de
+            -sc 404,301=https://inter.apo-ident.de
+            -ssl
+    "
+}
+
+# ECE (contentpool):
+# ------------------
+# check 91.250.112.167
+#   - contentpool.ece.com
+#
+eceContentpool {
+    name=eceContentpool
+    ip=91.250.112.167
+    parameter="
+        -p+ 80
+        -dn contentpool.ece.com
+            -sc 301=https://login.facelift-cloud.com
     "
 }
 
@@ -48,16 +63,16 @@ hiperscan {
 eceFacebook {
     name=eceFacebook
     ip=91.250.103.239
-    parameter="\
-        -p+ 5122 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
-        -dn ece-fb.de \
-            -sc 301=https://www.ece-fb.de \
-        -dn www.ece-fb.de \
-            -sc 301=https://www.ece-fb.de \
-            -ssc 301=https://www.ece-fb.de/admin/dashboard \
-            -ssc 401:/admin/dashboard \
-            -cre admin:Udababumu480 \
-            -ssc 200:/admin/dashboard \
+    parameter="
+        -p+ 5122 -p+ 80 -p+ 443 -p- 3306 -p- 111
+        -dn ece-fb.de
+            -sc 301=https://www.ece-fb.de
+        -dn www.ece-fb.de
+            -sc 301=https://www.ece-fb.de
+            -ssc 301=https://www.ece-fb.de/admin/dashboard
+            -ssc 401:/admin/dashboard
+            -cre admin:Udababumu480
+            -ssc 200:/admin/dashboard
             -ssl
     "
 }
@@ -73,22 +88,24 @@ eceFacebook {
 bmel {
     name=bmel
     ip=46.163.114.68
-    parameter="\
-        -p+ 22 -p+ 80 -p+ 443 \
-        -dn 500landinitiativen.de \
-            -sc 301 \
-            -ssc 301 \
-        -dn www.500landinitiativen.de \
-            -sc 301 \
-            -ssc 200 \
-            -ssl \
-        -dn haustier-berater.de \
-            -sc 301 \
-            -ssc 301 \
-        -dn www.haustier-berater.de \
-            -sc 301 \
-            -ssc 200 \
-            -ssl \
+    parameter="
+        -p+ 22 -p+ 80 -p+ 443
+        -dn 500landinitiativen.de
+            -sc 301
+            -ssc 301
+        -dn www.500landinitiativen.de
+            -sc 301
+            -ssc 200
+            -ssl
+        -dn haustier-berater.de
+            -sc 301
+            -ssc 301
+        -dn www.haustier-berater.de
+            -sc 301
+            -ssc 200
+            -ssl
+        -dn www.haustier-berater.de
+            -ssc 401=rsmBE:/typo3/
     "
 }
 
