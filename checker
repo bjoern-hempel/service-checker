@@ -48,7 +48,7 @@ done
 
 # a record check
 for domain in "${!aRecords[@]}"; do
-    if ! isDomainAssignedToIpCheck "$domain" "$ip"; then
+    if ! isDomainAssignedToIpCheck "$domain" "$ip" true; then
         allPassed=false
     fi
 done

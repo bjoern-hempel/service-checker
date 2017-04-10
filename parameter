@@ -102,12 +102,18 @@ while [[ $# > 0 ]]; do
 
     # help:  -cre,  --set-credenial           Sets the current webserver credentials. With this set credentials other commands can be combined.
     # help:
-    -cre|--credential)
+    -cre|--set-credential)
         currentCredentials="$2@"
         shift
     ;;
-    -cre=*|--credential=*)
+    -cre=*|--set-credential=*)
         currentCredentials="${1#*=}@"
+    ;;
+
+    # help:  -cre-, --remove-credenial        Removes the current set webserver credentials.
+    # help:
+    -cre-|--remove-credenial)
+        currentCredentials=""
     ;;
 
     # help:  -ssl,  --check-ssl-certificate   Checks the ssl certificate. Needs a -dn option before.
