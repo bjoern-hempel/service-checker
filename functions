@@ -121,6 +121,7 @@ environmentLoader()
 
     allPassed=true
 
+    # check all environments
     if [ "$environmentFunction" == "environment.all" ]; then
         for environmentFunction in "${environmentFunctions[@]}"; do
             if [ "$environmentFunction" == "environment.all" ]; then
@@ -138,10 +139,13 @@ environmentLoader()
                 allPassed=false
             fi
         done
+
+    # ..or only one environment
     else
         $environmentFunction
 
         log 'header' "Check config $name"
+
         ./checker $ip $parameter
 
         lastStatus=$?

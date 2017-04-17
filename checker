@@ -17,6 +17,10 @@ if [ $lastStatus -gt 0 ]; then
     exit $lastStatus
 fi
 
+# output settings
+resetOutputVars 50
+setOutputContentType "log:stdout"
+
 # include other libraries
 source 'parameter'
 
@@ -77,8 +81,8 @@ for domain in "${sslCheck[@]}"; do
     # get and save the issuer certificate
     certChain=$(getChainCertificate "$domain")
   
-    if [ "$certChain" == "" ]; then 
-        log 'failed' "No chain certificate returned."
+    if [ "$certChain" == "" ]; then
+        outputContent "domains.${domain}.certificate" "failed" "No chain certificate returned."
         allPassed=false
     else
         echo "$certChain" > "$chainfile"
@@ -106,11 +110,13 @@ done
 
 # print all check status
 if $allPassed; then
-    log "passed" "All checks passed."
+    outputContent "overall.status" "passed" "All checks passed."
+    outputFinish
     exit 0
 fi
 
-log "failed" "At least one check is not passed."
+outputContent "overall.status" "failed" "At least one check is not passed."
+outputFinish
 exit 1
 
 
