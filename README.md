@@ -49,7 +49,9 @@ Usage: ./checker [options...] <ip>
  -ssl,  --check-ssl-certificate   Checks the ssl certificate. Needs a -dn option before.
 
  -json, --json-file               Adds the json log output.
+
  -log,  --log-file                Adds the log output.
+
  -h,    --help                    Shows this help.
  
 ```

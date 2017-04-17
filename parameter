@@ -127,6 +127,7 @@ while [[ $# > 0 ]]; do
             ;;
 
         # help:  -json, --json-file               Adds the json log output.
+        # help:
         -json=*|--json-file=*)
             setOutputContentType "json:>${1#*=}"
             ;;
@@ -136,6 +137,7 @@ while [[ $# > 0 ]]; do
             ;;
 
         # help:  -log,  --log-file                Adds the log output.
+        # help:
         -log=*|--log-file=*)
             setOutputContentType "log:>>${1#*=}"
             ;;
