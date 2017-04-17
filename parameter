@@ -19,146 +19,145 @@ currentCredentials=""
 # help:
 # help: Usage: ./checker [options...] <ip>
 while [[ $# > 0 ]]; do
-  case "$1" in
-    # help:  -p+,
-    # help:  -pp,   --port-positive           Checks that this given port is opened on the given machine.
-    # help:
-    -pp|-p+|--port-positive)
-      portsPositive+=("$2")
-      shift
-    ;;
-    -pp=*|-p+=*|--port-positive=*)
-      portsPositive+=("${1#*=}")
-    ;;
+    case "$1" in
+        # help:  -p+,
+        # help:  -pp,   --port-positive           Checks that this given port is opened on the given machine.
+        # help:
+        -pp|-p+|--port-positive)
+            portsPositive+=("$2")
+            shift
+            ;;
+        -pp=*|-p+=*|--port-positive=*)
+            portsPositive+=("${1#*=}")
+            ;;
 
-    # help:  -p-,
-    # help:  -pn,   --port-negative           Checks that this given port is closed on the given machine.
-    # help:
-    -pn|-p-|--port-negative)
-      portsNegative+=("$2")
-      shift
-    ;;
-    -pn=*|-p-=*|--port-negative=*)
-      portsNegative+=("${1#*=}")
-    ;;
+        # help:  -p-,
+        # help:  -pn,   --port-negative           Checks that this given port is closed on the given machine.
+        # help:
+        -pn|-p-|--port-negative)
+            portsNegative+=("$2")
+            shift
+            ;;
+        -pn=*|-p-=*|--port-negative=*)
+            portsNegative+=("${1#*=}")
+            ;;
 
-    # help:  -sc,   --status-code             Checks that a given url returns an expected status code (http:80). Needs a -dn option before.
-    # help:
-    # help:         option (-dn domain.tld)                           url check                                     expected return
-    # help:         ---------------------------------------------------------------------------------------------------------------------------------------------------------
-    # help:         -sc 301                                           http://domain.tld                             301
-    # help:         -sc >                                             http://domain.tld                             301
-    # help:         -sc 301=https://domain.tld                        http://domain.tld                             301 with target https://domain.tld
-    # help:         -sc >https                                        http://(domain.tld)                           301 with target https://$1
-    # help:         -sc >/redirect/home.html                          http://(domain.tld)                           301 with target http://$1/redirect/home.html
-    # help:
-    -sc|--status-code)
-        read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "$2")
-        statusCodeCheck["$url"]="$ports"
-        shift
-    ;;
-    -sc=*|--status-code=*)
-        read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "${1#*=}")
-        statusCodeCheck["$url"]="$ports"
-    ;;
+        # help:  -sc,   --status-code             Checks that a given url returns an expected status code (http:80). Needs a -dn option before.
+        # help:
+        # help:         option (-dn domain.tld)                           url check                                     expected return
+        # help:         ---------------------------------------------------------------------------------------------------------------------------------------------------------
+        # help:         -sc 301                                           http://domain.tld                             301
+        # help:         -sc >                                             http://domain.tld                             301
+        # help:         -sc 301=https://domain.tld                        http://domain.tld                             301 with target https://domain.tld
+        # help:         -sc >https                                        http://(domain.tld)                           301 with target https://$1
+        # help:         -sc >/redirect/home.html                          http://(domain.tld)                           301 with target http://$1/redirect/home.html
+        # help:
+        -sc|--status-code)
+            read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "$2")
+            statusCodeCheck["$url"]="$ports"
+            shift
+            ;;
+        -sc=*|--status-code=*)
+            read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "${1#*=}")
+            statusCodeCheck["$url"]="$ports"
+            ;;
 
-    # help:  -ssc,  --secure-status-code      Checks that a given url returns an expected status code (https:443). Needs a -dn option before.
-    # help:
-    # help:         option (-dn domain.tld)                           url check                                     expected return
-    # help:         ---------------------------------------------------------------------------------------------------------------------------------------------------------
-    # help:         -ssc 401                                          https://domain.tld                            401 (password protection)
-    # help:         -ssc user:pass@200                                https://user:pass@domain.tld                  200
-    # help:         -cre user:pass                                    >> set credentials for the following checks
-    # help:         -ssc 200                                          https://user:pass@domain.tld                  200
-    # help:         -ssc user:wrongpass@401                           https://user:wrongpass@domain.tld             401
-    # help:         -cre-                                             >> remove credentials
-    # help:         -ssc 401                                          https://domain.tld                            401 (password protection)
-    # help:         -ssc user:pass@404:/server-status                 https://user:pass@domain.tld/server-status    404
-    # help:         -ssc 404:/nonexisting.html                        https://domain.tld/nonexisting.html           404
-    # help:         -ssc 404,401:/typo3                               https://domain.tld/typo3                      404 or 401
-    # help:         -ssc 404,401,301=https://typo3.domain.tld:/typo3  https://domain.tld/typo3                      404 or 401 or 301 with target https://typo3.domain.tld
-    # help:
-    -ssc|--secure-status-code)
-        read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "$2")
-        statusCodeCheck["$url"]="$ports"
-        shift
-    ;;
-    -ssc=*|--secure-status-code=*)
-        read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "${1#*=}")
-        statusCodeCheck["$url"]="$ports"
-    ;;
+        # help:  -ssc,  --secure-status-code      Checks that a given url returns an expected status code (https:443). Needs a -dn option before.
+        # help:
+        # help:         option (-dn domain.tld)                           url check                                     expected return
+        # help:         ---------------------------------------------------------------------------------------------------------------------------------------------------------
+        # help:         -ssc 401                                          https://domain.tld                            401 (password protection)
+        # help:         -ssc user:pass@200                                https://user:pass@domain.tld                  200
+        # help:         -cre user:pass                                    >> set credentials for the following checks
+        # help:         -ssc 200                                          https://user:pass@domain.tld                  200
+        # help:         -ssc user:wrongpass@401                           https://user:wrongpass@domain.tld             401
+        # help:         -cre-                                             >> remove credentials
+        # help:         -ssc 401                                          https://domain.tld                            401 (password protection)
+        # help:         -ssc user:pass@404:/server-status                 https://user:pass@domain.tld/server-status    404
+        # help:         -ssc 404:/nonexisting.html                        https://domain.tld/nonexisting.html           404
+        # help:         -ssc 404,401:/typo3                               https://domain.tld/typo3                      404 or 401
+        # help:         -ssc 404,401,301=https://typo3.domain.tld:/typo3  https://domain.tld/typo3                      404 or 401 or 301 with target https://typo3.domain.tld
+        # help:
+        -ssc|--secure-status-code)
+            read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "$2")
+            statusCodeCheck["$url"]="$ports"
+            shift
+            ;;
+        -ssc=*|--secure-status-code=*)
+            read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "${1#*=}")
+            statusCodeCheck["$url"]="$ports"
+            ;;
 
-    # help:  -dn,   --set-domainname          Sets the current domain name. With this set domain name other commands can be combined.
-    # help: 
-    -dn|--domainname)
-        currentDomain="$2"
-        aRecords[$currentDomain]=true
-        shift
-    ;;
-    -dn=*|--domainname=*)
-        currentDomain="${1#*=}"
-        aRecords[$currentDomain]=true
-    ;;
+        # help:  -dn,   --set-domainname          Sets the current domain name. With this set domain name other commands can be combined.
+        # help: 
+        -dn|--domainname)
+            currentDomain="$2"
+            aRecords[$currentDomain]=true
+            shift
+            ;;
+        -dn=*|--domainname=*)
+            currentDomain="${1#*=}"
+            aRecords[$currentDomain]=true
+            ;;
 
-    # help:  -cre,  --set-credenial           Sets the current webserver credentials. With this set credentials other commands can be combined.
-    # help:
-    -cre|--set-credential)
-        currentCredentials="$2@"
-        shift
-    ;;
-    -cre=*|--set-credential=*)
-        currentCredentials="${1#*=}@"
-    ;;
+        # help:  -cre,  --set-credenial           Sets the current webserver credentials. With this set credentials other commands can be combined.
+        # help:
+        -cre|--set-credential)
+            currentCredentials="$2@"
+            shift
+            ;;
+        -cre=*|--set-credential=*)
+            currentCredentials="${1#*=}@"
+            ;;
 
-    # help:  -cre-, --remove-credenial        Removes the current set webserver credentials.
-    # help:
-    -cre-|--remove-credenial)
-        currentCredentials=""
-    ;;
+        # help:  -cre-, --remove-credenial        Removes the current set webserver credentials.
+        # help:
+        -cre-|--remove-credenial)
+            currentCredentials=""
+            ;;
 
-    # help:  -ssl,  --check-ssl-certificate   Checks the ssl certificate. Needs a -dn option before.
-    # help:
-    -ssl)
-        if [ "$currentDomain" == "" ]; then
-            log 'error' "Please specifiy the domain name (-dn) first, before use -ssl option."
-            exit
-        fi
+        # help:  -ssl,  --check-ssl-certificate   Checks the ssl certificate. Needs a -dn option before.
+        # help:
+        -ssl)
+            if [ "$currentDomain" == "" ]; then
+                log 'error' "Please specifiy the domain name (-dn) first, before use -ssl option."
+                exit
+            fi
+            sslCheck+=("$currentDomain")
+            ;;
 
-        sslCheck+=("$currentDomain")
-    ;;
+        # help:  -json, --json-file               Adds the json log output.
+        -json=*|--json-file=*)
+            setOutputContentType "json:>${1#*=}"
+            ;;
+        -json|--json-file)
+            setOutputContentType "json:>$2"
+            shift
+            ;;
 
-    # help:  -json, --json-file               Adds the json log output.
-    -json=*|--json-file=*)
-        setOutputContentType "json:>${1#*=}"
-    ;;
-    -json|--json-file)
-        setOutputContentType "json:>$2"
-        shift
-    ;;
+        # help:  -log, --log-file                 Adds the log output.
+        -log=*|--log-file=*)
+            setOutputContentType "log:>>${1#*=}"
+            ;;
+        -log|--log-file)
+            setOutputContentType "log:>>$2"
+            shift
+            ;;
 
-    # help:  -log, --log-file                 Adds the log output.
-    -log=*|--log-file=*)
-        setOutputContentType "log:>>${1#*=}"
-    ;;
-    -log|--log-file)
-        setOutputContentType "log:>>$2"
-        shift
-    ;;
+        # help:  -h,    --help                    Shows this help.
+        # help:
+        -h|--help)
+            cat parameter | grep "# help:" | grep -v 'cat parameter' | sed 's/[ ]*# help:[ ]\?//g'
+            exit 0
+            ;;
 
-    # help:  -h,    --help                    Shows this help.
-    # help:
-    -h|--help)
-      cat parameter | grep "# help:" | grep -v 'cat parameter' | sed 's/[ ]*# help:[ ]\?//g'
-      exit 0
-    ;;
-
-    #
-    # collect all unknown parameters
-    #
-    *)
-      PARAMETERS+=("$1")
-    ;;
-  esac
-  shift
+        #
+        # collect all unknown parameters
+        #
+        *)
+            PARAMETERS+=("$1")
+            ;;
+    esac
+    shift
 done
 

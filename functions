@@ -14,7 +14,12 @@ environmentLoader()
     source 'parameter'
 
     local environmentFunction=''
- 
+
+    # log paths
+    local fulllogPath="/var/www/de/ixno/dashboard/html"
+    local  logLogPath="log"
+    local jsonLogPath="json"
+
     if [ ${#PARAMETERS[@]} -gt 0 ]; then
         if [ -f "$configFile" ]; then
             local environmentFound=false
@@ -131,7 +136,7 @@ environmentLoader()
             $environmentFunction
 
             log 'header' "Check config $name"
-            ./checker $ip $parameter
+            ./checker $ip $parameter -json "$fulllogPath/$jsonLogPath/$name.$jsonLogPath" -log "$fulllogPath/$logLogPath/$name.$logLogPath"
 
             lastStatus=$?
 
@@ -146,7 +151,7 @@ environmentLoader()
 
         log 'header' "Check config $name"
 
-        ./checker $ip $parameter
+        ./checker $ip $parameter -json "$fulllogPath/$jsonLogPath/$name.$jsonLogPath" -log "$fulllogPath/$logLogPath/$name.$logLogPath"
 
         lastStatus=$?
 
