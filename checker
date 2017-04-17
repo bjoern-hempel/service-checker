@@ -58,6 +58,7 @@ for domain in "${!aRecords[@]}"; do
 done
 
 # status code check
+statusCodeCounter=0
 for url in "${!statusCodeCheck[@]}"; do
     ports="${statusCodeCheck[$url]}"
 
@@ -91,7 +92,7 @@ for domain in "${sslCheck[@]}"; do
         if ! isCertificateVerified "$certFile" "$chainfile" "$domain"; then
             allPassed=false
         fi
-        if ! isChainCertificateVerified "$chainfile" "$issuer"; then
+        if ! isChainCertificateVerified "$chainfile" "$issuer" "$domain"; then
             allPassed=false
         fi
         if ! isCertificateValid "$certFile" "$domain"; then
@@ -110,12 +111,12 @@ done
 
 # print all check status
 if $allPassed; then
-    outputContent "overall.status" "passed" "All checks passed."
+    outputContent "overall" "passed" "All checks passed."
     outputFinish
     exit 0
 fi
 
-outputContent "overall.status" "failed" "At least one check is not passed."
+outputContent "overall" "failed" "At least one check is not passed."
 outputFinish
 exit 1
 
