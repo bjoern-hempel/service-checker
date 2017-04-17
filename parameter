@@ -135,7 +135,7 @@ while [[ $# > 0 ]]; do
             shift
             ;;
 
-        # help:  -log, --log-file                 Adds the log output.
+        # help:  -log,  --log-file                Adds the log output.
         -log=*|--log-file=*)
             setOutputContentType "log:>>${1#*=}"
             ;;

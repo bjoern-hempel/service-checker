@@ -11,8 +11,8 @@ Usage: ./checker [options...] <ip>
  -p+,
  -pp,   --port-positive           Checks that this given port is opened on the given machine.
 
- -p-,   --port-negative           Checks that this given port is closed on the given machine.
- -pn,   -
+ -p-,
+ -pn,   --port-negative           Checks that this given port is closed on the given machine.
 
  -sc,   --status-code             Checks that a given url returns an expected status code (http:80). Needs a -dn option before.
 
@@ -44,8 +44,12 @@ Usage: ./checker [options...] <ip>
 
  -cre,  --set-credenial           Sets the current webserver credentials. With this set credentials other commands can be combined.
 
+ -cre-, --remove-credenial        Removes the current set webserver credentials.
+
  -ssl,  --check-ssl-certificate   Checks the ssl certificate. Needs a -dn option before.
 
+ -json, --json-file               Adds the json log output.
+ -log,  --log-file                Adds the log output.
  -h,    --help                    Shows this help.
  
 ```
