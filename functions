@@ -7,24 +7,27 @@
 #
 environmentLoader()
 {
-    configFile="$1"
+    scriptFile="$1"
     shift
 
     # parse parameter
-    source 'parameter'
+    source "$root/parameter"
 
     local environmentFunction=''
 
-    # log paths
-    local fulllogPath="/var/www/de/ixno/dashboard/html"
-    local  logLogPath="log"
-    local jsonLogPath="json"
+    # build local config file
+    local configFile="$root/$CONFIG_ENVIRONMENT_FILE"
+
+    # switch to global config file if local config file is not available
+    if [ ! -f "$configFile" ]; then
+        configFile="$CONFIG_ENVIRONMENT_FOLDER/$CONFIG_ENVIRONMENT_FILE"
+    fi
 
     if [ ${#PARAMETERS[@]} -gt 0 ]; then
         if [ -f "$configFile" ]; then
             local environmentFound=false
 
-            cfgParser 'environments.conf' 'environment'
+            cfgParser "$configFile" 'environment'
 
             # all function
             environment.all() {
@@ -57,7 +60,7 @@ environmentLoader()
     fi
 
     if [ "$environmentFunction" == "" ]; then
-        cfgParser 'environments.conf' 'environment'
+        cfgParser "$configFile" 'environment'
 
         # some vars
         declare -A keyToEnvironment
@@ -136,7 +139,7 @@ environmentLoader()
             $environmentFunction
 
             log 'header' "Check config $name"
-            ./checker $ip $parameter -json "$fulllogPath/$jsonLogPath/$name.$jsonLogPath" -log "$fulllogPath/$logLogPath/$name.$logLogPath"
+            $scriptFile $ip $parameter
 
             lastStatus=$?
 
@@ -150,8 +153,7 @@ environmentLoader()
         $environmentFunction
 
         log 'header' "Check config $name"
-
-        ./checker $ip $parameter -json "$fulllogPath/$jsonLogPath/$name.$jsonLogPath" -log "$fulllogPath/$logLogPath/$name.$logLogPath"
+        $scriptFile $ip $parameter
 
         lastStatus=$?
 

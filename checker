@@ -1,14 +1,17 @@
 #!/bin/bash
 
 # include the libraries
-source 'lib/all'
-source 'functions'
+filename=$(readlink ${BASH_SOURCE[0]})
+root=$(dirname "$filename")
+source "$root/lib/all"
+source "$root/functions"
 
 # some params
-configFile='environments.conf'
+CONFIG_ENVIRONMENT_FOLDER='/etc/service-checker'
+CONFIG_ENVIRONMENT_FILE='environments.conf'
 
 # start environment loader
-environmentLoader "$configFile" "$@"
+environmentLoader "$0" "$@"
 lastStatus=$?
 
 # environment loader was used. Stop here.
@@ -22,7 +25,7 @@ resetOutputVars 50
 setOutputContentType "log:stdout"
 
 # include other libraries
-source 'parameter'
+source "$root/parameter"
 
 # save the ip address
 ip="${PARAMETERS[0]}"

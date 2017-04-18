@@ -15,6 +15,8 @@ ecointense {
             -sc 301=https://www.ecointense.de
             -ssc 200
             -ssl
+        -json /var/www/de/ixno/dashboard/html/json/ecointense.json
+        -log  /var/www/de/ixno/dashboard/html/log/ecointense.log
     "
 }
 
@@ -36,6 +38,8 @@ hiperscan {
         -dn www.inter.apo-ident.de
             -sc 404,301=https://inter.apo-ident.de
             -ssl
+        -json /var/www/de/ixno/dashboard/html/json/hiperscan.json
+        -log  /var/www/de/ixno/dashboard/html/log/hiperscan.log
     "
 }
 
