@@ -6,9 +6,15 @@ root=$(dirname "$filename")
 source "$root/lib/all"
 source "$root/functions"
 
+# date (log file usage)
+dateFile=$(date +%Y-%m-%d_%H%M%S)
+
 # some params
 CONFIG_ENVIRONMENT_FOLDER='/etc/service-checker'
 CONFIG_ENVIRONMENT_FILE='environments.conf'
+TMP_CONTENT_LOG_FILE="/tmp/service-checker.${dateFile}.log"
+EMAIL_FROM_ADDRESS="monitoring@dd3.rsm-development.de"
+EMAIL_TIME_FILE="/etc/service-checker/email.conf"
 
 # start environment loader
 environmentLoader "$0" "$@"
@@ -26,6 +32,10 @@ setOutputContentType "log:stdout"
 
 # include other libraries
 source "$root/parameter"
+
+if [ "$emailAddress" != "" ]; then
+    setOutputContentType "log:>${TMP_CONTENT_LOG_FILE}"
+fi
 
 # save the ip address
 ip="${PARAMETERS[0]}"
@@ -114,13 +124,26 @@ done
 
 # print all check status
 if $allPassed; then
-    outputContent "overall" "passed" "All checks passed."
-    outputFinish
-    exit 0
+    exitType="passed"
+    exitText="All checks passed."
+    exitStatus=0
+else
+    exitType="failed"
+    exitText="At least one check is not passed."
+    exitStatus=1
 fi
 
-outputContent "overall" "failed" "At least one check is not passed."
+# print the last message (summary message)
+outputContent "overall" "$exitType" "$exitText"
 outputFinish
-exit 1
 
+# send email if log file is available and email address given
+if [ -f "$TMP_CONTENT_LOG_FILE" ]; then
+    if [ "$emailAddress" != "" ]; then
+        emailContent=$(cat "$TMP_CONTENT_LOG_FILE")
+        sendMails "$exitText" "$emailContent" "$emailAddress" "$EMAIL_FROM_ADDRESS" "$EMAIL_TIME_FILE" 10
+    fi
+    rm "$TMP_CONTENT_LOG_FILE"
+fi
 
+exit $exitStatus

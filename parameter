@@ -14,6 +14,7 @@ PARAMETERS=()
 
 currentDomain=""
 currentCredentials=""
+emailAddress=""
 
 # read arguments
 # help:
@@ -124,6 +125,14 @@ while [[ $# > 0 ]]; do
                 exit
             fi
             sslCheck+=("$currentDomain")
+            ;;
+
+        -em|--email)
+            emailAddress="$2"
+            shift
+            ;;
+        -em=*|--email=*)
+            emailAddress="${1#*=}"
             ;;
 
         # help:  -json, --json-file               Adds the json log output.
