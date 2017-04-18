@@ -11,10 +11,35 @@ dateFile=$(date +%Y-%m-%d_%H%M%S)
 
 # some params
 CONFIG_ENVIRONMENT_FOLDER='/etc/service-checker'
-CONFIG_ENVIRONMENT_FILE='environments.conf'
-TMP_CONTENT_LOG_FILE="/tmp/service-checker.${dateFile}.log"
-EMAIL_FROM_ADDRESS="monitoring@dd3.rsm-development.de"
-EMAIL_TIME_FILE="/etc/service-checker/email.conf"
+  CONFIG_ENVIRONMENT_FILE='environments.conf'
+     TMP_CONTENT_LOG_FILE="/tmp/service-checker.${dateFile}.log"
+       EMAIL_FROM_ADDRESS="monitoring@dd3.rsm-development.de"
+          EMAIL_TIME_FILE="/etc/service-checker/email.conf"
+                 INI_FILE="$root/config.ini"
+
+# create ini file if not exists
+if [ ! -f "$INI_FILE" ]; then
+    touch "$INI_FILE"
+fi
+
+# get parent command
+parentCommand="$(ps -o comm= $PPID)"
+[ "$parentCommand" == "bash" ] && directCall=true || directCall=false
+
+# is running check only for direct calls, otherwise ignore this
+if $directCall; then
+    # check running status
+    scriptIsRunning=$(getCachedValue "$INI_FILE" scriptIsRunning false)
+
+    # script is already running
+    if $scriptIsRunning; then
+        echo "Script is already running. Abort.."
+        exit
+    fi
+
+    # set running flag
+    setCachedValue "$INI_FILE" scriptIsRunning true
+fi
 
 # start environment loader
 environmentLoader "$0" "$@"
@@ -23,6 +48,7 @@ lastStatus=$?
 # environment loader was used. Stop here.
 if [ $lastStatus -gt 0 ]; then
     ((lastStatus--))
+    setCachedValue "$INI_FILE" scriptIsRunning false
     exit $lastStatus
 fi
 
@@ -139,10 +165,10 @@ outputFinish
 
 # send email if log file is available and email address given
 if [ -f "$TMP_CONTENT_LOG_FILE" ]; then
-    if [ "$emailAddress" != "" ]; then
-        emailContent=$(cat "$TMP_CONTENT_LOG_FILE")
-        sendMails "$exitText" "$emailContent" "$emailAddress" "$EMAIL_FROM_ADDRESS" "$EMAIL_TIME_FILE" 10
-    fi
+#    if [ "$emailAddress" != "" ]; then
+#        emailContent=$(cat "$TMP_CONTENT_LOG_FILE")
+#        sendMails "$exitText" "$emailContent" "$emailAddress" "$EMAIL_FROM_ADDRESS" "$EMAIL_TIME_FILE" 10
+#    fi
     rm "$TMP_CONTENT_LOG_FILE"
 fi
 
