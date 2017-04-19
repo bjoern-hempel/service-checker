@@ -127,7 +127,14 @@ environmentLoader()
         environmentFunction="${keyToEnvironment[$environmentNumber]}"
     fi
 
-    allPassed=true
+    # some other used variables
+    local allPassed=true
+    local moreParameters=""
+
+    # collect more parameters
+    if $suppressDirectOutput; then
+        moreParameters="$moreParameters -sdo 1"
+    fi
 
     # check all environments
     if [ "$environmentFunction" == "environment.all" ]; then
@@ -139,7 +146,7 @@ environmentLoader()
             $environmentFunction
 
             outputContentLog "header" "Check config $name"
-            $scriptFile $ip -id "$name" $parameter
+            $scriptFile $ip -id "$name" $parameter $moreParameters
 
             lastStatus=$?
 
@@ -153,7 +160,7 @@ environmentLoader()
         $environmentFunction
 
         outputContentLog "header" "Check config $name"
-        $scriptFile $ip -id "$name" $parameter
+        $scriptFile $ip -id "$name" $parameter $moreParameters
 
         lastStatus=$?
 

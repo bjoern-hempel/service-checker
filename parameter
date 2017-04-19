@@ -16,7 +16,9 @@ currentDomain=""
 currentCredentials=""
 emailAddress=""
 fromEmailAddress=""
+timeOutEmailDelivery=1800 # half an hour
 identifier=""
+suppressDirectOutput=false
 
 # read arguments
 # help:
@@ -144,6 +146,15 @@ while [[ $# > 0 ]]; do
             fromEmailAddress="${1#*=}"
             ;;
 
+        # help:  -to,   --time-out                Time out for email delivery (avoid mass email delivery)
+        -to|--time-out)
+            timeOutEmailDelivery="$2"
+            shift
+            ;;
+        -to=*|--time-out=*)
+            timeOutEmailDelivery="${1#*=}"
+            ;;
+
         # help:  -json, --json-file               Adds the json log output.
         -json=*|--json-file=*)
             setOutputContentType "json:>${1#*=}"
@@ -170,6 +181,16 @@ while [[ $# > 0 ]]; do
             ;;
         -id=*|--identifier=*)
             identifier="${1#*=}"
+            ;;
+
+        # help:  -sdo,  --suppress-direct-output  1 - Suppress all directly printed outputs to screen (excluding log outputs, etc.); 0 - Don't suppress
+        # help:
+        -sdo|--suppress-direct-output)
+            [ "$2" != "0" ] && suppressDirectOutput=true
+            shift
+            ;;
+        -sdo=*|--suppress-direct-output=*)
+            [ "${1#*=}" != "0" ] && suppressDirectOutput=true
             ;;
 
         # help:  -h,    --help                    Shows this help.

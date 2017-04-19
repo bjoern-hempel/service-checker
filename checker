@@ -13,7 +13,6 @@ dateFile=$(date +%Y-%m-%d_%H%M%S)
 CONFIG_ENVIRONMENT_FOLDER='/etc/service-checker'
   CONFIG_ENVIRONMENT_FILE='environments.conf'
      TMP_CONTENT_LOG_FILE="/tmp/service-checker.${dateFile}.log"
-          EMAIL_TIME_FILE="/etc/service-checker/email.conf"
                  INI_FILE="$root/config.ini"
 
 # create ini file if not exists
@@ -52,8 +51,10 @@ if [ $lastStatus -gt 0 ]; then
 fi
 
 # output settings
-resetOutputVars 50
-setOutputContentType "log:stdout"
+resetOutputVars 45
+if ! $suppressDirectOutput; then
+    setOutputContentType "log:stdout"
+fi
 
 # include other libraries
 source "$root/parameter"
@@ -174,7 +175,7 @@ outputFinish
 if [ -f "$TMP_CONTENT_LOG_FILE" ]; then
     if [ "$emailAddress" != "" ]; then
         emailContent=$(cat "$TMP_CONTENT_LOG_FILE")
-        sendErrorMailsTimeFiltered "$exitText" "$emailContent" "$emailAddress" "$fromEmailAddress" "$INI_FILE" "$identifier" $sendErrorMail 15
+        sendErrorMailsTimeFiltered "$exitText" "$emailContent" "$emailAddress" "$fromEmailAddress" "$INI_FILE" "$identifier" $sendErrorMail $timeOutEmailDelivery
     fi
 
     rm "$TMP_CONTENT_LOG_FILE"
