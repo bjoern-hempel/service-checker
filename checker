@@ -175,7 +175,7 @@ outputFinish
 if [ -f "$TMP_CONTENT_LOG_FILE" ]; then
     if [ "$emailAddress" != "" ]; then
         emailContent=$(cat "$TMP_CONTENT_LOG_FILE")
-        sendErrorMailsTimeFiltered "$exitText" "$emailContent" "$emailAddress" "$fromEmailAddress" "$INI_FILE" "$identifier" $sendErrorMail $timeOutEmailDelivery
+        sendErrorMailsTimeFiltered "$exitText" "$emailContent" "$emailAddress" "$fromEmailAddress" "$INI_FILE" "$identifier" $sendErrorMail $timeOutEmailDelivery $suppressDirectOutput
     fi
 
     rm "$TMP_CONTENT_LOG_FILE"

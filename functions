@@ -145,7 +145,7 @@ environmentLoader()
 
             $environmentFunction
 
-            outputContentLog "header" "Check config $name"
+            outputContentLog "header" "Check config $name" $suppressDirectOutput
             $scriptFile $ip -id "$name" $parameter $moreParameters
 
             lastStatus=$?
@@ -159,7 +159,7 @@ environmentLoader()
     else
         $environmentFunction
 
-        outputContentLog "header" "Check config $name"
+        outputContentLog "header" "Check config $name" $suppressDirectOutput
         $scriptFile $ip -id "$name" $parameter $moreParameters
 
         lastStatus=$?
