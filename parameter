@@ -15,6 +15,8 @@ PARAMETERS=()
 currentDomain=""
 currentCredentials=""
 emailAddress=""
+fromEmailAddress=""
+identifier=""
 
 # read arguments
 # help:
@@ -127,12 +129,24 @@ while [[ $# > 0 ]]; do
             sslCheck+=("$currentDomain")
             ;;
 
+        # help:  -em,   --email                   Email addresses (comma separated) from recipients of the success and failed mails.
+        # help:
         -em|--email)
             emailAddress="$2"
             shift
             ;;
         -em=*|--email=*)
             emailAddress="${1#*=}"
+            ;;
+
+        # help:  -fe,   --from-email              From email address (used for success and failed mails).
+        # help:
+        -fe|--from-email)
+            fromEmailAddress="$2"
+            shift
+            ;;
+        -fe=*|--from-email=*)
+            fromEmailAddress="${1#*=}"
             ;;
 
         # help:  -json, --json-file               Adds the json log output.
@@ -153,6 +167,16 @@ while [[ $# > 0 ]]; do
         -log|--log-file)
             setOutputContentType "log:>>$2"
             shift
+            ;;
+
+        # help:  -id,   --identifier              An optional identifier which will be used for some information channels like email, etc. (if not given it uses the ip address)
+        # help:
+        -id|--identifier)
+            identifier="$2"
+            shift
+            ;;
+        -id=*|--identifier=*)
+            identifier="${1#*=}"
             ;;
 
         # help:  -h,    --help                    Shows this help.

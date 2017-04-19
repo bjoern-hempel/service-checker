@@ -16,6 +16,7 @@ ecointense {
             -ssc 200
             -ssl
         -em bjoern@hempel.li,bjoern.hempel@ressourcenmangel.de
+        -fe monitoring@taiki.de
         -json /var/www/de/ixno/dashboard/html/json/ecointense.json
         -log  /var/www/de/ixno/dashboard/html/log/ecointense.log
     "
@@ -40,6 +41,7 @@ hiperscan {
             -sc 404,301=https://inter.apo-ident.de
             -ssl
         -em bjoern@hempel.li,bjoern.hempel@ressourcenmangel.de
+        -fe monitoring@taiki.de
         -json /var/www/de/ixno/dashboard/html/json/hiperscan.json
         -log  /var/www/de/ixno/dashboard/html/log/hiperscan.log
     "

@@ -13,7 +13,6 @@ dateFile=$(date +%Y-%m-%d_%H%M%S)
 CONFIG_ENVIRONMENT_FOLDER='/etc/service-checker'
   CONFIG_ENVIRONMENT_FILE='environments.conf'
      TMP_CONTENT_LOG_FILE="/tmp/service-checker.${dateFile}.log"
-       EMAIL_FROM_ADDRESS="monitoring@dd3.rsm-development.de"
           EMAIL_TIME_FILE="/etc/service-checker/email.conf"
                  INI_FILE="$root/config.ini"
 
@@ -66,6 +65,12 @@ fi
 # save the ip address
 ip="${PARAMETERS[0]}"
 
+# check identifier
+if [ "$identifier" == "" ]; then
+    identifier="$ip"
+fi
+
+# some other used vars
 allPassed=true
 
 # check if server is running
@@ -153,10 +158,12 @@ if $allPassed; then
     exitType="passed"
     exitText="All checks passed."
     exitStatus=0
+    sendErrorMail=false
 else
     exitType="failed"
     exitText="At least one check is not passed."
     exitStatus=1
+    sendErrorMail=true
 fi
 
 # print the last message (summary message)
@@ -165,11 +172,19 @@ outputFinish
 
 # send email if log file is available and email address given
 if [ -f "$TMP_CONTENT_LOG_FILE" ]; then
-#    if [ "$emailAddress" != "" ]; then
-#        emailContent=$(cat "$TMP_CONTENT_LOG_FILE")
-#        sendMails "$exitText" "$emailContent" "$emailAddress" "$EMAIL_FROM_ADDRESS" "$EMAIL_TIME_FILE" 10
-#    fi
+    if [ "$emailAddress" != "" ]; then
+        emailContent=$(cat "$TMP_CONTENT_LOG_FILE")
+        sendErrorMailsTimeFiltered "$exitText" "$emailContent" "$emailAddress" "$fromEmailAddress" "$INI_FILE" "$identifier" $sendErrorMail 15
+    fi
+
     rm "$TMP_CONTENT_LOG_FILE"
 fi
 
+# is running check only for direct calls, otherwise ignore this
+if $directCall; then
+    setCachedValue "$INI_FILE" scriptIsRunning false
+fi
+
+# throw the exit status
 exit $exitStatus
+
