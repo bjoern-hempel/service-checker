@@ -16,6 +16,7 @@ currentDomain=""
 currentCredentials=""
 emailAddress=""
 fromEmailAddress=""
+emailRelay="direct"
 timeOutEmailDelivery=1800 # half an hour
 identifier=""
 suppressDirectOutput=false
@@ -144,6 +145,15 @@ while [[ $# > 0 ]]; do
             ;;
         -fe=*|--from-email=*)
             fromEmailAddress="${1#*=}"
+            ;;
+
+        # help:  -er,   --email-relay             Change the email relay strategy (direct, docker:[name]).
+        -er|--email-relay)
+            emailRelay="$2"
+            shift
+            ;;
+        -er=*|--email-relay=*)
+            emailRelay="${1#*=}"
             ;;
 
         # help:  -to,   --time-out                Time out for email delivery (avoid mass email delivery)
