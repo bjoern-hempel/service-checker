@@ -11,7 +11,7 @@ TODO
 ```
 $ service-checker --help
 
-Usage: ./checker [options...] <ip>
+Usage: service-checker [options...] <ip>
  -p+,
  -pp,   --port-positive           Checks that this given port is opened on the given machine.
 
