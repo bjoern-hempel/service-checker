@@ -9,7 +9,7 @@ TODO
 ### show help
 
 ```
-$ ./checker --help
+$ service-checker --help
 
 Usage: ./checker [options...] <ip>
  -p+,
@@ -70,7 +70,7 @@ Usage: ./checker [options...] <ip>
 Check ip 138.201.93.253, that the ports 22, 80, 443 are opened and the port 3306 is closed.
 
 ```
-$ ./checker -p+ 22 -p+ 80 -p+ 443 -p- 3306 138.201.93.253
+$ service-checker -p+ 22 -p+ 80 -p+ 443 -p- 3306 138.201.93.253
 [2017-03-12 16:52:42] [PASSED‧] The system with ip 138.201.93.253 is running
 [2017-03-12 16:52:42] [PASSED‧] The port "22" on system with ip "138.201.93.253" is open.
 [2017-03-12 16:52:42] [PASSED‧] The port "80" on system with ip "138.201.93.253" is open.
@@ -84,7 +84,7 @@ $ ./checker -p+ 22 -p+ 80 -p+ 443 -p- 3306 138.201.93.253
 Check ip 83.169.16.166; Ports 10022, 80 and 443 must be opened; Ports 3306 and 111 must be closed; inter.apo-ident.de and www.inter.apo-ident.de must be assigned to the ip; Unsecure connections must be redirected to the secure one (https://inter.apo-ident.de); Secure connections must serve a 200 status code; The certificates must be valid
 
 ```
-$ ./checker 83.169.16.166 -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
+$ service-checker 83.169.16.166 -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
 -dn inter.apo-ident.de -sc 301=https://inter.apo-ident.de -ssc 200 -ssl \
 -dn www.inter.apo-ident.de -sc 404,301=https://inter.apo-ident.de
 [2017-03-12 16:43:38] [PASSED‧] The system with ip 83.169.16.166 is running
@@ -108,91 +108,11 @@ $ ./checker 83.169.16.166 -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
 [2017-03-12 16:43:39] [PASSED‧] All checks passed.
 ```
 
-## if environments.conf is set
-
-You can find an example inside the file environments.conf.dist
-
-```
-$ ./checker 
-[2017-03-15 01:18:52] [HEADER‧] CHECK CONFIG HIPERSCAN
-[2017-03-15 01:18:53] [PASSED‧] The system with ip 83.169.16.166 is running
-[2017-03-15 01:18:53] [PASSED‧] The port "10022" on system with ip "83.169.16.166" is open.
-[2017-03-15 01:18:53] [PASSED‧] The port "443" on system with ip "83.169.16.166" is open.
-[2017-03-15 01:18:53] [PASSED‧] The port "3306" on system with ip "83.169.16.166" is closed.
-[2017-03-15 01:18:53] [PASSED‧] The port "111" on system with ip "83.169.16.166" is closed.
-[2017-03-15 01:18:53] [PASSED‧] The given domain "inter.apo-ident.de" is assigned to ip "83.169.16.166".
-[2017-03-15 01:18:53] [PASSED‧] The given domain "www.inter.apo-ident.de" is assigned to ip "83.169.16.166".
-[2017-03-15 01:18:53] [PASSED‧] The url "http://inter.apo-ident.de" returns the expected status code "301".
-[2017-03-15 01:18:53] [PASSED‧] The url "http://inter.apo-ident.de" returns the given compare string "https://inter.apo-ident.de".
-[2017-03-15 01:18:53] [PASSED‧] The url "http://www.inter.apo-ident.de" returns the expected status code "301" (one of the expected ports: 404, 301).
-[2017-03-15 01:18:53] [PASSED‧] The url "http://www.inter.apo-ident.de" returns the given compare string "https://inter.apo-ident.de".
-[2017-03-15 01:18:53] [PASSED‧] The url "https://inter.apo-ident.de" returns the expected status code "200".
-[2017-03-15 01:18:53] [PASSED‧] The certificate from the domain "inter.apo-ident.de" was successfully verified.
-[2017-03-15 01:18:53] [PASSED‧] The chainfile from the issuer "/C=BE/O=GlobalSign nv-sa/CN=AlphaSSL CA - SHA256 - G2" was successfully verified.
-[2017-03-15 01:18:53] [PASSED‧] The certificate from the domain "inter.apo-ident.de" is valid until "2018-03-07 14:53".
-[2017-03-15 01:18:53] [PASSED‧] The domain "inter.apo-ident.de" validate the domain name in certificate file.
-[2017-03-15 01:18:54] [PASSED‧] The ocsp is activated on domain "inter.apo-ident.de" ("http://ocsp2.globalsign.com/gsalphasha2g2").
-[2017-03-15 01:18:54] [PASSED‧] All checks passed.
-[2017-03-15 01:18:54] [HEADER‧] CHECK CONFIG ECEFACEBOOK
-[2017-03-15 01:18:54] [PASSED‧] The system with ip 91.250.103.239 is running
-[2017-03-15 01:18:54] [PASSED‧] The port "5122" on system with ip "91.250.103.239" is open.
-[2017-03-15 01:18:54] [PASSED‧] The port "80" on system with ip "91.250.103.239" is open.
-[2017-03-15 01:18:54] [PASSED‧] The port "443" on system with ip "91.250.103.239" is open.
-[2017-03-15 01:18:54] [PASSED‧] The port "3306" on system with ip "91.250.103.239" is closed.
-[2017-03-15 01:18:54] [PASSED‧] The port "111" on system with ip "91.250.103.239" is closed.
-[2017-03-15 01:18:54] [PASSED‧] The given domain "www.ece-fb.de" is assigned to ip "91.250.103.239".
-[2017-03-15 01:18:54] [PASSED‧] The given domain "ece-fb.de" is assigned to ip "91.250.103.239".
-[2017-03-15 01:18:55] [PASSED‧] The url "https://admin:Udababumu480@www.ece-fb.de/admin/dashboard" returns the expected status code "200".
-[2017-03-15 01:18:55] [PASSED‧] The url "http://www.ece-fb.de" returns the expected status code "301".
-[2017-03-15 01:18:55] [PASSED‧] The url "http://www.ece-fb.de" returns the given compare string "https://www.ece-fb.de".
-[2017-03-15 01:18:55] [PASSED‧] The url "http://ece-fb.de" returns the expected status code "301".
-[2017-03-15 01:18:55] [PASSED‧] The url "http://ece-fb.de" returns the given compare string "https://www.ece-fb.de".
-[2017-03-15 01:18:56] [PASSED‧] The url "https://www.ece-fb.de/admin/dashboard" returns the expected status code "401".
-[2017-03-15 01:18:56] [PASSED‧] The url "https://www.ece-fb.de" returns the expected status code "301".
-[2017-03-15 01:18:56] [PASSED‧] The url "https://www.ece-fb.de" returns the given compare string "https://www.ece-fb.de/admin/dashboard".
-[2017-03-15 01:18:57] [PASSED‧] The certificate from the domain "www.ece-fb.de" was successfully verified.
-[2017-03-15 01:18:57] [PASSED‧] The chainfile from the issuer "/C=US/O=Let's Encrypt/CN=Let's Encrypt Authority X3" was successfully verified.
-[2017-03-15 01:18:57] [PASSED‧] The certificate from the domain "www.ece-fb.de" is valid until "2017-05-19 02:05".
-[2017-03-15 01:18:57] [PASSED‧] The domain "www.ece-fb.de" validate the domain name in certificate file.
-[2017-03-15 01:18:57] [PASSED‧] The ocsp is activated on domain "www.ece-fb.de" ("http://ocsp.int-x3.letsencrypt.org/").
-[2017-03-15 01:18:57] [PASSED‧] All checks passed.
-[2017-03-15 01:18:57] [HEADER‧] CHECK CONFIG BMEL
-[2017-03-15 01:18:57] [PASSED‧] The system with ip 46.163.114.68 is running
-[2017-03-15 01:18:57] [PASSED‧] The port "22" on system with ip "46.163.114.68" is open.
-[2017-03-15 01:18:57] [PASSED‧] The port "80" on system with ip "46.163.114.68" is open.
-[2017-03-15 01:18:57] [PASSED‧] The port "443" on system with ip "46.163.114.68" is open.
-[2017-03-15 01:18:57] [PASSED‧] The given domain "www.haustier-berater.de" is assigned to ip "46.163.114.68".
-[2017-03-15 01:18:57] [PASSED‧] The given domain "haustier-berater.de" is assigned to ip "46.163.114.68".
-[2017-03-15 01:18:57] [PASSED‧] The given domain "www.500landinitiativen.de" is assigned to ip "46.163.114.68".
-[2017-03-15 01:18:57] [PASSED‧] The given domain "500landinitiativen.de" is assigned to ip "46.163.114.68".
-[2017-03-15 01:18:58] [PASSED‧] The url "https://500landinitiativen.de" returns the expected status code "301".
-[2017-03-15 01:18:58] [PASSED‧] The url "http://haustier-berater.de" returns the expected status code "301".
-[2017-03-15 01:18:58] [PASSED‧] The url "https://www.500landinitiativen.de" returns the expected status code "200".
-[2017-03-15 01:18:58] [PASSED‧] The url "https://haustier-berater.de" returns the expected status code "301".
-[2017-03-15 01:18:58] [PASSED‧] The url "http://www.haustier-berater.de" returns the expected status code "301".
-[2017-03-15 01:18:58] [PASSED‧] The url "http://500landinitiativen.de" returns the expected status code "301".
-[2017-03-15 01:18:58] [PASSED‧] The url "https://www.haustier-berater.de" returns the expected status code "200".
-[2017-03-15 01:18:58] [PASSED‧] The url "http://www.500landinitiativen.de" returns the expected status code "301".
-[2017-03-15 01:18:59] [PASSED‧] The certificate from the domain "www.500landinitiativen.de" was successfully verified.
-[2017-03-15 01:18:59] [PASSED‧] The chainfile from the issuer "/C=BE/O=GlobalSign nv-sa/CN=AlphaSSL CA - SHA256 - G2" was successfully verified.
-[2017-03-15 01:18:59] [PASSED‧] The certificate from the domain "www.500landinitiativen.de" is valid until "2017-11-15 15:56".
-[2017-03-15 01:18:59] [PASSED‧] The domain "www.500landinitiativen.de" validate the domain name in certificate file.
-[2017-03-15 01:18:59] [PASSED‧] The ocsp is activated on domain "www.500landinitiativen.de" ("http://ocsp2.globalsign.com/gsalphasha2g2").
-[2017-03-15 01:18:59] [PASSED‧] The certificate from the domain "www.haustier-berater.de" was successfully verified.
-[2017-03-15 01:18:59] [PASSED‧] The chainfile from the issuer "/C=BE/O=GlobalSign nv-sa/CN=GlobalSign Domain Validation CA - SHA256 - G2" was successfully verified.
-[2017-03-15 01:18:59] [PASSED‧] The certificate from the domain "www.haustier-berater.de" is valid until "2017-12-08 16:55".
-[2017-03-15 01:18:59] [PASSED‧] The domain "www.haustier-berater.de" validate the domain name in certificate file.
-[2017-03-15 01:19:00] [PASSED‧] The ocsp is activated on domain "www.haustier-berater.de" ("http://ocsp2.globalsign.com/gsdomainvalsha2g2").
-[2017-03-15 01:19:00] [PASSED‧] All checks passed.
-[2017-03-15 01:19:00] [HEADER‧] RESULT
-[2017-03-15 01:19:00] [PASSED‧] All checks passed
-```
-
 ## use environments
 
-The checker script uses the environments.conf inside the root folder (mostly inside the folder /opt/service-checker) or directly from /etc/service-checker/environments.conf.
+The checker script uses the environments.conf inside the root folder (mostly inside the folder /opt/service-checker) or directly from /etc/service-checker/environments.conf. You can find some examples within the file environments.conf.dist.
 
-### example
+### example content for environments.conf
 
 ```
 # METRO PPD (live):
@@ -227,7 +147,92 @@ metroppd {
 
 ### usage (with choice)
 
+```
+$ service-checker 
 
+The following system test environments are available:
+
+No Name                 IP
+------------------------------------------------
+1) ALL                  ALL
+2) metroppd             194.156.54.59
+
+Choose the environment number you would like to test: 2
+
+[2017-04-25 01:52:39] [HEADER] CHECK CONFIG METROPPD
+[2017-04-25 01:52:39] [PASSED] [system.awake]                               The system with ip 194.156.54.59 is running
+[2017-04-25 01:52:39] [PASSED] [ports.positive.80]                          The port "80" on system with ip "194.156.54.59" is open.
+[2017-04-25 01:52:39] [PASSED] [ports.positive.443]                         The port "443" on system with ip "194.156.54.59" is open.
+[2017-04-25 01:52:41] [PASSED] [ports.negative.22]                          The port "22" on system with ip "194.156.54.59" is closed.
+[2017-04-25 01:52:41] [PASSED] [domains.rsmso.ppd.metro.de]                 The given domain "rsmso.ppd.metro.de" is assigned to ip "194.156.54.59".
+[2017-04-25 01:52:41] [PASSED] [domains.home.ppd.metro.de]                  The given domain "home.ppd.metro.de" is assigned to ip "194.156.54.59".
+[2017-04-25 01:52:42] [PASSED] [statusCodes.case1]                          ┏━  The url "https://rsm:rsm2016@rsmso.ppd.metro.de/v1.0/info" returns the expected status code "200".
+                                                                            ┃   The url "https://rsm:rsm2016@rsmso.ppd.metro.de/v1.0/info" returns the given compare string:
+                                                                            ┗━  "ausgeliefert".
+[2017-04-25 01:52:42] [PASSED] [statusCodes.case2]                          ┏━  The url "http://home.ppd.metro.de" returns the expected status code "301".
+                                                                            ┃   The url "http://home.ppd.metro.de" returns the given compare string:
+                                                                            ┗━  "https://home.ppd.metro.de".
+[2017-04-25 01:52:42] [PASSED] [statusCodes.case3]                          ┏━  The url "http://rsm:rsm2016@rsmso.ppd.metro.de" returns the expected status code "301".
+                                                                            ┃   The url "http://rsm:rsm2016@rsmso.ppd.metro.de" returns the given compare string:
+                                                                            ┗━  "https://rsmso.ppd.metro.de".
+[2017-04-25 01:52:42] [PASSED] [statusCodes.case4]                          The url "https://rsmso.ppd.metro.de" returns the expected status code "401".
+[2017-04-25 01:52:42] [PASSED] [statusCodes.case5]                          The url "https://home.ppd.metro.de" returns the expected status code "200".
+[2017-04-25 01:52:43] [PASSED] [certificates.rsmso.ppd.metro.de.verified]   The certificate from the domain "rsmso.ppd.metro.de" was successfully verified.
+[2017-04-25 01:52:43] [PASSED] [certificates.rsmso.ppd.metro.de.chain]      ┏━  The chainfile from the issuer
+                                                                            ┃   "/C=GB/ST=Greater Manchester/L=Salford/O=COMODO CA Limited/CN=COMODO RSA Organization Validation Secure Server CA"
+                                                                            ┗━  was successfully verified.
+[2017-04-25 01:52:43] [PASSED] [certificates.rsmso.ppd.metro.de.valid]      The certificate from the domain "rsmso.ppd.metro.de" is valid until "2017-11-26 00:59".
+[2017-04-25 01:52:43] [PASSED] [certificates.rsmso.ppd.metro.de.domainName] The domain "rsmso.ppd.metro.de" validate the domain name in certificate file.
+[2017-04-25 01:52:43] [PASSED] [certificates.rsmso.ppd.metro.de.ocsp]       The ocsp is activated on domain "rsmso.ppd.metro.de" ("http://ocsp.comodoca.com").
+[2017-04-25 01:52:43] [PASSED] [certificates.home.ppd.metro.de.verified]    The certificate from the domain "home.ppd.metro.de" was successfully verified.
+[2017-04-25 01:52:44] [PASSED] [certificates.home.ppd.metro.de.chain]       ┏━  The chainfile from the issuer
+                                                                            ┃   "/C=GB/ST=Greater Manchester/L=Salford/O=COMODO CA Limited/CN=COMODO RSA Organization Validation Secure Server CA"
+                                                                            ┗━  was successfully verified.
+[2017-04-25 01:52:44] [PASSED] [certificates.home.ppd.metro.de.valid]       The certificate from the domain "home.ppd.metro.de" is valid until "2017-11-26 00:59".
+[2017-04-25 01:52:44] [PASSED] [certificates.home.ppd.metro.de.domainName]  The domain "home.ppd.metro.de" validate the domain name in certificate file.
+[2017-04-25 01:52:44] [PASSED] [certificates.home.ppd.metro.de.ocsp]        The ocsp is activated on domain "home.ppd.metro.de" ("http://ocsp.comodoca.com").
+[2017-04-25 01:52:44] [PASSED] [overall]                                    All checks passed.
+[2017-04-25 01:52:44] [INFO]   Ignore sending success mail to bjoern.hempel@ressourcenmangel.de (no error mail before) (identifier: metroppd).
+```
 
 ### usage (directly use the choice)
+
+```
+user$ service-checker metroppd
+[2017-04-25 01:53:29] [HEADER] CHECK CONFIG METROPPD
+[2017-04-25 01:53:29] [PASSED] [system.awake]                               The system with ip 194.156.54.59 is running
+[2017-04-25 01:53:29] [PASSED] [ports.positive.80]                          The port "80" on system with ip "194.156.54.59" is open.
+[2017-04-25 01:53:29] [PASSED] [ports.positive.443]                         The port "443" on system with ip "194.156.54.59" is open.
+[2017-04-25 01:53:31] [PASSED] [ports.negative.22]                          The port "22" on system with ip "194.156.54.59" is closed.
+[2017-04-25 01:53:31] [PASSED] [domains.rsmso.ppd.metro.de]                 The given domain "rsmso.ppd.metro.de" is assigned to ip "194.156.54.59".
+[2017-04-25 01:53:31] [PASSED] [domains.home.ppd.metro.de]                  The given domain "home.ppd.metro.de" is assigned to ip "194.156.54.59".
+[2017-04-25 01:53:32] [PASSED] [statusCodes.case1]                          ┏━  The url "https://rsm:rsm2016@rsmso.ppd.metro.de/v1.0/info" returns the expected status code "200".
+                                                                            ┃   The url "https://rsm:rsm2016@rsmso.ppd.metro.de/v1.0/info" returns the given compare string:
+                                                                            ┗━  "ausgeliefert".
+[2017-04-25 01:53:32] [PASSED] [statusCodes.case2]                          ┏━  The url "http://home.ppd.metro.de" returns the expected status code "301".
+                                                                            ┃   The url "http://home.ppd.metro.de" returns the given compare string:
+                                                                            ┗━  "https://home.ppd.metro.de".
+[2017-04-25 01:53:32] [PASSED] [statusCodes.case3]                          ┏━  The url "http://rsm:rsm2016@rsmso.ppd.metro.de" returns the expected status code "301".
+                                                                            ┃   The url "http://rsm:rsm2016@rsmso.ppd.metro.de" returns the given compare string:
+                                                                            ┗━  "https://rsmso.ppd.metro.de".
+[2017-04-25 01:53:32] [PASSED] [statusCodes.case4]                          The url "https://rsmso.ppd.metro.de" returns the expected status code "401".
+[2017-04-25 01:53:32] [PASSED] [statusCodes.case5]                          The url "https://home.ppd.metro.de" returns the expected status code "200".
+[2017-04-25 01:53:33] [PASSED] [certificates.rsmso.ppd.metro.de.verified]   The certificate from the domain "rsmso.ppd.metro.de" was successfully verified.
+[2017-04-25 01:53:33] [PASSED] [certificates.rsmso.ppd.metro.de.chain]      ┏━  The chainfile from the issuer
+                                                                            ┃   "/C=GB/ST=Greater Manchester/L=Salford/O=COMODO CA Limited/CN=COMODO RSA Organization Validation Secure Server CA"
+                                                                            ┗━  was successfully verified.
+[2017-04-25 01:53:33] [PASSED] [certificates.rsmso.ppd.metro.de.valid]      The certificate from the domain "rsmso.ppd.metro.de" is valid until "2017-11-26 00:59".
+[2017-04-25 01:53:33] [PASSED] [certificates.rsmso.ppd.metro.de.domainName] The domain "rsmso.ppd.metro.de" validate the domain name in certificate file.
+[2017-04-25 01:53:33] [PASSED] [certificates.rsmso.ppd.metro.de.ocsp]       The ocsp is activated on domain "rsmso.ppd.metro.de" ("http://ocsp.comodoca.com").
+[2017-04-25 01:53:33] [PASSED] [certificates.home.ppd.metro.de.verified]    The certificate from the domain "home.ppd.metro.de" was successfully verified.
+[2017-04-25 01:53:34] [PASSED] [certificates.home.ppd.metro.de.chain]       ┏━  The chainfile from the issuer
+                                                                            ┃   "/C=GB/ST=Greater Manchester/L=Salford/O=COMODO CA Limited/CN=COMODO RSA Organization Validation Secure Server CA"
+                                                                            ┗━  was successfully verified.
+[2017-04-25 01:53:34] [PASSED] [certificates.home.ppd.metro.de.valid]       The certificate from the domain "home.ppd.metro.de" is valid until "2017-11-26 00:59".
+[2017-04-25 01:53:34] [PASSED] [certificates.home.ppd.metro.de.domainName]  The domain "home.ppd.metro.de" validate the domain name in certificate file.
+[2017-04-25 01:53:34] [PASSED] [certificates.home.ppd.metro.de.ocsp]        The ocsp is activated on domain "home.ppd.metro.de" ("http://ocsp.comodoca.com").
+[2017-04-25 01:53:34] [PASSED] [overall]                                    All checks passed.
+[2017-04-25 01:53:34] [INFO]   Ignore sending success mail to bjoern.hempel@ressourcenmangel.de (no error mail before) (identifier: metroppd).
+```
+
 
