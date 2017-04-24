@@ -2,6 +2,10 @@
 
 ## Usage
 
+### installation
+
+TODO
+
 ### show help
 
 ```
@@ -183,3 +187,47 @@ $ ./checker
 [2017-03-15 01:19:00] [HEADER‧] RESULT
 [2017-03-15 01:19:00] [PASSED‧] All checks passed
 ```
+
+## use environments
+
+The checker script uses the environments.conf inside the root folder (mostly inside the folder /opt/service-checker) or directly from /etc/service-checker/environments.conf.
+
+### example
+
+```
+# METRO PPD (live):
+# -----------------
+# check 194.156.54.59
+#   - rsmso.ppd.metro.de
+#   - api, etc.
+metroppd {
+    name=metroppd
+    ip=194.156.54.59
+    parameter="
+        -p+ 80 -p+ 443 -p- 22
+        -dn rsmso.ppd.metro.de
+            -ssc 401
+            -cre rsm:rsm2016
+            -sc 301=https://rsmso.ppd.metro.de
+            -ssc 200=ausgeliefert:/v1.0/info
+            -ssl
+        -dn home.ppd.metro.de
+            -cre-
+            -sc 301=https://home.ppd.metro.de
+            -ssc 200
+            -ssl
+        --json-file=/home/bjoern/logs/metroppd/json/metroppd.json
+        --log-file=/home/bjoern/logs/metroppd/log/metroppd.log
+        --email=bjoern.hempel@ressourcenmangel.de,nadine.sander@ressourcenmangel.de
+        --from-email=monitoring@dd3.rsm-development.de
+        --time-out=1800
+    "
+}
+```
+
+### usage (with choice)
+
+
+
+### usage (directly use the choice)
+
