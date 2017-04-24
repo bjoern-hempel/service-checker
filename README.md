@@ -41,16 +41,19 @@ Usage: ./checker [options...] <ip>
         -ssc 404,401,301=https://typo3.domain.tld:/typo3  https://domain.tld/typo3                      404 or 401 or 301 with target https://typo3.domain.tld
 
  -dn,   --set-domainname          Sets the current domain name. With this set domain name other commands can be combined.
-
  -cre,  --set-credenial           Sets the current webserver credentials. With this set credentials other commands can be combined.
-
  -cre-, --remove-credenial        Removes the current set webserver credentials.
-
  -ssl,  --check-ssl-certificate   Checks the ssl certificate. Needs a -dn option before.
 
+ -em,   --email                   Email addresses (comma separated) from recipients of the success and failed mails.
+ -fe,   --from-email              From email address (used for success and failed mails).
+ -er,   --email-relay             Change the email relay strategy (direct, docker:[name]).
+ -to,   --time-out                Time out for email delivery (avoid mass email delivery)
  -json, --json-file               Adds the json log output.
-
  -log,  --log-file                Adds the log output.
+ -id,   --identifier              An optional identifier which will be used for some information channels like email, etc. (if not given it uses the ip address)
+
+ -sdo,  --suppress-direct-output  1 - Suppress all directly printed outputs to screen (excluding log outputs, etc.); 0 - Don't suppress
 
  -h,    --help                    Shows this help.
  
