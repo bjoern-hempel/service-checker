@@ -2,7 +2,7 @@
 
 The service checker is a tool to do some server checks. It can send emails if any check is failed. It can check the server accessibility, open and closed ports, assigned websites, returned http status codes, ssl certificates and so on. 
 
-## A.) First Usage
+## A.) First usage
 
 ### A.1) installation
 
