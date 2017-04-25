@@ -11,12 +11,12 @@ environmentLoader()
     shift
 
     # parse parameter
-    source "$root/parameter"
+    source "$pathRoot/parameter"
 
     local environmentFunction=''
 
     # build local config file
-    local configFile="$root/$CONFIG_ENVIRONMENT_FILE"
+    local configFile="$pathRoot/$CONFIG_ENVIRONMENT_FILE"
 
     # switch to global config file if local config file is not available
     if [ ! -f "$configFile" ]; then

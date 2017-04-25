@@ -1,10 +1,16 @@
 #!/bin/bash
 
 # include the libraries
-filename=$(readlink ${BASH_SOURCE[0]})
-root=$(dirname "$filename")
-source "$root/lib/all"
-source "$root/functions"
+if [ -h "${BASH_SOURCE[0]}" ]; then
+    filename=$(readlink ${BASH_SOURCE[0]})
+    pathRoot=$(dirname "$filename")"/.."
+else
+    pathRoot="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
+fi
+
+# include some sources
+source "$pathRoot/lib/all"
+source "$pathRoot/functions"
 
 # date (log file usage)
 dateFile=$(date +%Y-%m-%d_%H%M%S)
@@ -13,7 +19,7 @@ dateFile=$(date +%Y-%m-%d_%H%M%S)
 CONFIG_ENVIRONMENT_FOLDER='/etc/service-checker'
   CONFIG_ENVIRONMENT_FILE='environments.conf'
      TMP_CONTENT_LOG_FILE="/tmp/service-checker.${dateFile}.log"
-                 INI_FILE="$root/config.ini"
+                 INI_FILE="$pathRoot/config.ini"
 
 # create ini file if not exists
 if [ ! -f "$INI_FILE" ]; then
@@ -57,7 +63,7 @@ if ! $suppressDirectOutput; then
 fi
 
 # include other libraries
-source "$root/parameter"
+source "$pathRoot/parameter"
 
 if [ "$emailAddress" != "" ]; then
     setOutputContentType "log:>${TMP_CONTENT_LOG_FILE}"

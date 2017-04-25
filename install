@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# ------------
+# A install script to install the public scripts.
+#
+# @author    Björn Hempel <bjoern@hempel.li>
+# @date      2017-04-26
+# @version   1.0
+#
+# @copyright ISC License
+# @copyright
+# @copyright Copyright (c) 2017, Björn Hempel
+# @copyright
+# @copyright Permission to use, copy, modify, and/or distribute this software for any
+# @copyright purpose with or without fee is hereby granted, provided that the above
+# @copyright copyright notice and this permission notice appear in all copies.
+# @copyright
+# @copyright THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+# @copyright REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+# @copyright AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+# @copyright INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+# @copyright LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+# @copyright OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# @copyright PERFORMANCE OF THIS SOFTWARE.
+# @copyright
+# @copyright Written by Björn Hempel <bjoern@hempel.li>.
+# ------------
+
+# some configs before
+pathRoot="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+friendsOfBashPath="/opt/friends-of-bash"
+friendsOfBashInclude="$friendsOfBashPath/lib/all"
+
+# some constants
+ROOT_UID="0"
+
+# check if we are root
+if [ "$UID" -ne "$ROOT_UID" ]; then
+    echo "You must be root to do that!"
+    exit 1
+fi
+
+# check friends of bash library
+if [ ! -d "$friendsOfBashPath" ]; then
+    echo "Friends of Bash library path \"$friendsOfBashPath\" was not found. Please install it first."
+    exit 1
+fi
+
+# check friends of bash include file
+if [ ! -f "$friendsOfBashInclude" ]; then
+    echo "Friends of Bash include file \"$friendsOfBashInclude\" was not found. Please fix this."
+    exit 1
+fi
+
+# include friends of bash
+source "$friendsOfBashInclude"
+
+# some configs
+declare -A installableApps
+    installPath="/usr/local/bin"
+     sourcePath="$pathRoot/bin"
+installableApps=([checker]=service-checker)
+
+# install all given apps
+for app in "${!installableApps[@]}"; do
+    appTo="${installableApps[$app]}"
+
+    installApp "$sourcePath/$app" "$installPath/$appTo"
+done
+
+
