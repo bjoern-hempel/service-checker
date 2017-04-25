@@ -112,7 +112,7 @@ $ service-checker 83.169.16.166 -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
 
 ## 2.) use environments
 
-The checker script uses the environments.conf inside the root folder (mostly inside the folder /opt/service-checker) or directly from /etc/service-checker/environments.conf. You can find some examples within the file environments.conf.dist.
+The checker script uses the environments.conf inside the root folder (mostly inside the folder /opt/service-checker) or directly from /etc/service-checker/environments.conf. You can find some examples within the file environments.conf.dist. With the environment files you can save some server check settings without entering every time the check configs. Instead you can use an environment name or the a selection list to start the test.
 
 ### 2.1) example content for environments.conf
 
