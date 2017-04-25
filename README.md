@@ -2,13 +2,13 @@
 
 The service checker is a tool to do some server checks. It can send emails if any check is failed. It can check the server accessibility, open and closed ports, assigned websites, returned http status codes, ssl certificates and so on. 
 
-## Usage
+## A.) Usage
 
-### installation
+### A.1) installation
 
 TODO
 
-### show help
+### A.2) show help
 
 ```
 $ service-checker --help
@@ -65,9 +65,9 @@ Usage: service-checker [options...] <ip>
  
 ```
 
-## examples
+## 1.) examples
 
-### 1) simple ip and port check
+### 1.1) simple ip and port check
 
 Check ip 138.201.93.253, that the ports 22, 80, 443 are opened and the port 3306 is closed.
 
@@ -81,7 +81,7 @@ $ service-checker -p+ 22 -p+ 80 -p+ 443 -p- 3306 138.201.93.253
 [2017-03-12 16:52:42] [PASSED‧] All checks passed.
 ```
 
-### 2) ip, port, domain, status code and ssl check
+### 1.2) ip, port, domain, status code and ssl check
 
 Check ip 83.169.16.166; Ports 10022, 80 and 443 must be opened; Ports 3306 and 111 must be closed; inter.apo-ident.de and www.inter.apo-ident.de must be assigned to the ip; Unsecure connections must be redirected to the secure one (https://inter.apo-ident.de); Secure connections must serve a 200 status code; The certificates must be valid
 
@@ -110,11 +110,11 @@ $ service-checker 83.169.16.166 -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
 [2017-03-12 16:43:39] [PASSED‧] All checks passed.
 ```
 
-## use environments
+## 2.) use environments
 
 The checker script uses the environments.conf inside the root folder (mostly inside the folder /opt/service-checker) or directly from /etc/service-checker/environments.conf. You can find some examples within the file environments.conf.dist.
 
-### example content for environments.conf
+### 2.1) example content for environments.conf
 
 ```
 # METRO PPD (live):
@@ -147,7 +147,7 @@ metroppd {
 }
 ```
 
-### usage (with choice)
+### 2.2) usage (with choice)
 
 ```
 $ service-checker 
@@ -197,7 +197,7 @@ Choose the environment number you would like to test: 2
 [2017-04-25 01:52:44] [INFO]   Ignore sending success mail to bjoern.hempel@ressourcenmangel.de (no error mail before) (identifier: metroppd).
 ```
 
-### usage (directly use the choice)
+### 2.3) usage (directly use the choice)
 
 ```
 user$ service-checker metroppd
@@ -236,5 +236,3 @@ user$ service-checker metroppd
 [2017-04-25 01:53:34] [PASSED] [overall]                                    All checks passed.
 [2017-04-25 01:53:34] [INFO]   Ignore sending success mail to bjoern.hempel@ressourcenmangel.de (no error mail before) (identifier: metroppd).
 ```
-
-
