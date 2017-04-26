@@ -8,8 +8,13 @@ else
     pathRoot="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
 fi
 
+friendsOfBashLibs=("/opt/friends-of-bash/lib" "$pathRoot/friends-of-bash/lib")
+
+# Todo: find the lib folder, if not install it
+friendsOfBashLib="$pathRoot/friends-of-bash/lib"
+
 # include some sources
-source "$pathRoot/lib/all"
+source "$friendsOfBashLib/all"
 source "$pathRoot/functions"
 
 # date (log file usage)
