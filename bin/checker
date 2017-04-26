@@ -9,9 +9,20 @@ else
 fi
 
 friendsOfBashLibs=("/opt/friends-of-bash/lib" "$pathRoot/friends-of-bash/lib")
+friendsOfBashLib=""
 
-# Todo: find the lib folder, if not install it
-friendsOfBashLib="$pathRoot/friends-of-bash/lib"
+for directory in "${friendsOfBashLibs[@]}"; do
+    if [ -d "$directory" ]; then
+        friendsOfBashLib="$directory"
+        break
+    fi
+done
+
+# Todo: Try to install friends of bash
+if [ "$friendsOfBashLib" == "" ]; then
+    echo "no friends of bash library found."
+    exit
+fi
 
 # include some sources
 source "$friendsOfBashLib/all"
