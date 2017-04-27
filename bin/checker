@@ -8,25 +8,8 @@ else
     pathRoot="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
 fi
 
-friendsOfBashLibs=("/opt/friends-of-bash/lib" "$pathRoot/friends-of-bash/lib")
-friendsOfBashLib=""
-
-for directory in "${friendsOfBashLibs[@]}"; do
-    if [ -d "$directory" ]; then
-        friendsOfBashLib="$directory"
-        break
-    fi
-done
-
-# Todo: Try to install friends of bash
-if [ "$friendsOfBashLib" == "" ]; then
-    echo "no friends of bash library found."
-    exit
-fi
-
-# include some sources
-source "$friendsOfBashLib/all"
-source "$pathRoot/functions"
+# the lib loader
+source "$pathRoot/lib/libLoader"
 
 # date (log file usage)
 dateFile=$(date +%Y-%m-%d_%H%M%S)
@@ -35,7 +18,7 @@ dateFile=$(date +%Y-%m-%d_%H%M%S)
 CONFIG_ENVIRONMENT_FOLDER='/etc/service-checker'
   CONFIG_ENVIRONMENT_FILE='environments.conf'
      TMP_CONTENT_LOG_FILE="/tmp/service-checker.${dateFile}.log"
-                 INI_FILE="$pathRoot/config.ini"
+                 INI_FILE="$pathRoot/config/config.ini"
 
 # create ini file if not exists
 if [ ! -f "$INI_FILE" ]; then
@@ -79,7 +62,7 @@ if ! $suppressDirectOutput; then
 fi
 
 # include other libraries
-source "$pathRoot/parameter"
+source "$pathRoot/lib/parameter"
 
 if [ "$emailAddress" != "" ]; then
     setOutputContentType "log:>${TMP_CONTENT_LOG_FILE}"

@@ -11,12 +11,12 @@ environmentLoader()
     shift
 
     # parse parameter
-    source "$pathRoot/parameter"
+    source "$pathRoot/lib/parameter"
 
     local environmentFunction=''
 
     # build local config file
-    local configFile="$pathRoot/$CONFIG_ENVIRONMENT_FILE"
+    local configFile="$pathRoot/config/$CONFIG_ENVIRONMENT_FILE"
 
     # switch to global config file if local config file is not available
     if [ ! -f "$configFile" ]; then
@@ -108,12 +108,13 @@ environmentLoader()
             echo
             echo -en "$environmentList"
             echo
-            echo -n  "Choose the environment number you would like to test: "
+            echo -n  "Choose the environment number you would like to test (press ESC to cancel): "
             read -n 1 environmentNumber && echo
 
             if [ "$environmentNumber" == $'\e' ]; then
                 echo
                 log "info" "Switch process was canceled by user."
+                setCachedValue "$INI_FILE" scriptIsRunning false
                 exit
             elif [ -z "${keyToEnvironment[$environmentNumber]}" ]; then
                 echo && echo -e "${COLOR_RED}The entered version number $environmentNumber does not exist. Try another one.${COLOR_NORM}" && echo
