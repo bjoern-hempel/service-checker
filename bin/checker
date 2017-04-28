@@ -8,8 +8,9 @@ else
     pathRoot="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
 fi
 
-# the lib loader
-source "$pathRoot/lib/libLoader"
+# the friends of bash detection and function loader
+source "$pathRoot/lib/fobDetection"
+source "$pathRoot/lib/functions"
 
 # date (log file usage)
 dateFile=$(date +%Y-%m-%d_%H%M%S)

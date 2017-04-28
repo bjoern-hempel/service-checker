@@ -1,0 +1,35 @@
+# friends of bash libs
+   friendsOfBashPathRemote="/opt/friends-of-bash"
+friendsOfBashIncludeRemote="$friendsOfBashPathRemote/lib/all"
+    friendsOfBashPathLocal="$pathRoot/friends-of-bash"
+ friendsOfBashIncludeLocal="$friendsOfBashPathLocal/lib/all"
+     friendsOfBashLibFound=false
+                remoteTest=true
+                 localTest=true
+
+# no local test if this is a global installation
+[ ! -z $GLOBAL_INSTALLATION ] && $GLOBAL_INSTALLATION && localTest=false
+
+# check the friends of bash library
+if $remoteTest && ! $friendsOfBashLibFound && [ -d "$friendsOfBashPathRemote" ] && [ -f "$friendsOfBashIncludeRemote" ]; then
+    friendsOfBashLibFound=true
+        friendsOfBashPath="$friendsOfBashPathRemote"
+     friendsOfBashInclude="$friendsOfBashIncludeRemote"
+fi
+if $localTest &&  ! $friendsOfBashLibFound && [ -d "$friendsOfBashPathLocal"  ] && [ -f "$friendsOfBashIncludeLocal"  ]; then
+    friendsOfBashLibFound=true
+        friendsOfBashPath="$friendsOfBashPathLocal"
+     friendsOfBashInclude="$friendsOfBashIncludeLocal"
+fi
+
+# script include: no friends of bash library detected
+if ! $friendsOfBashLibFound && [ -z $INSTALLATION ]; then
+    echo "No friends of bash library found."
+    exit
+fi
+
+# script include: friends of bash library detected
+if $friendsOfBashLibFound && [ -z $INSTALLATION ]; then
+    source "$friendsOfBashInclude"
+fi
+

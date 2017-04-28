@@ -26,46 +26,98 @@
 # @copyright Written by Björn Hempel <bjoern@hempel.li>.
 # ------------
 
+# git settings
+friendsOfBashGitUri="git://github.com/bjoern-hempel/friends-of-bash.git"
+serviceCheckerGitUri="git://github.com/bjoern-hempel/service-checker.git"
+
 # some configs before
 pathRoot="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-friendsOfBashPath="/opt/friends-of-bash"
-friendsOfBashInclude="$friendsOfBashPath/lib/all"
 
-# some constants
-ROOT_UID="0"
+# initial values
+GLOBAL_INSTALLATION=false
+CREATE_SYMLINKS=false
+INSTALLATION=true
+ROOT_UID=0
 
-# check if we are root
-if [ "$UID" -ne "$ROOT_UID" ]; then
-    echo "You must be root to do that!"
+# declare parameter list array
+PARAMETERS=()
+
+# read arguments
+while [[ $# > 0 ]]; do
+    case "$1" in
+        # log option (2 parameter)
+        -g|--global)
+            GLOBAL_INSTALLATION=true
+        ;;
+
+        # treat all other parameter as normal parameter
+        *)
+            PARAMETERS+=("$1")
+        ;;
+    esac
+    shift
+done
+
+# the global mode needs root credentials
+if $GLOBAL_INSTALLATION && [ "$UID" -ne "$ROOT_UID" ]; then
+    echo "You need root credentials, if you want to make a global installation."
     exit 1
 fi
 
-# check friends of bash library
-if [ ! -d "$friendsOfBashPath" ]; then
-    echo "Friends of Bash library path \"$friendsOfBashPath\" was not found. Please install it first."
+# the local mode doesn't need root credentials
+if ! $GLOBAL_INSTALLATION && [ "$UID" -eq "$ROOT_UID" ]; then
+    echo "You try to make a local installation with root credentials (sudo). Please use the global parameter (-g) for a global installation or install it as a normal user."
     exit 1
 fi
 
-# check friends of bash include file
-if [ ! -f "$friendsOfBashInclude" ]; then
-    echo "Friends of Bash include file \"$friendsOfBashInclude\" was not found. Please fix this."
-    exit 1
+# detect friends of bash library → $friendsOfBashInclude
+source "$pathRoot/lib/fobDetection"
+
+# the friends of bash library was not found
+if ! $friendsOfBashLibFound; then
+    if $GLOBAL_INSTALLATION; then
+           friendsOfBashPath="$friendsOfBashPathRemote"
+        friendsOfBashInclude="$friendsOfBashIncludeRemote"
+    else
+           friendsOfBashPath="$friendsOfBashPathLocal"
+        friendsOfBashInclude="$friendsOfBashIncludeLocal"
+    fi
+
+    git clone "$friendsOfBashGitUri" "$friendsOfBashPath"
+
+    if [ ! -d "$friendsOfBashPath" ]; then
+        echo "Error occurred while installing the friends of bash library. The folder \"$friendsOfBashPath\" was not found."
+        exit 1
+    fi
+
+    if [ ! -f "$friendsOfBashInclude"  ]; then
+        echo "Error occurred while installing the friends of bash library. The include file \"$friendsOfBashInclude\" was not found."
+        exit 1
+    fi
 fi
 
 # include friends of bash
 source "$friendsOfBashInclude"
 
-# some configs
-declare -A installableApps
-    installPath="/usr/local/bin"
-     sourcePath="$pathRoot/bin"
-installableApps=([checker]=service-checker)
+if $GLOBAL_INSTALLATION; then
+    # TODO: git checkout to /opt if necessary
+    # TODO: make ./install
+    # TODO: do the following stuff
 
-# install all given apps
-for app in "${!installableApps[@]}"; do
-    appTo="${installableApps[$app]}"
+    # some configs
+    declare -A installableApps
+        installPath="/usr/local/bin"
+         sourcePath="$pathRoot/bin"
+    installableApps=([checker]=service-checker)
 
-    installApp "$sourcePath/$app" "$installPath/$appTo"
-done
+    # install all given apps
+    for app in "${!installableApps[@]}"; do
+        appTo="${installableApps[$app]}"
 
+        installApp "$sourcePath/$app" "$installPath/$appTo"
+    done
+fi
+
+# a success message - finish here
+log "success" "The installation script was executed successfully."
 
