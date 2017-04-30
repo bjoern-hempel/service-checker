@@ -40,7 +40,9 @@ projectGitUri="git://github.com/bjoern-hempel/service-checker.git"
           projectUsageRemote="service-checker --help"
 projectInstallSuccessMessage="The service-checker is installed in the folder \"%s\"."
   projectInstallErrorMessage="Error occurred while installing the service checker into \"%s\"."
-       projectInstallMessage="Try to install the service-checker to \"%s\"."
+       projectInstallMessage="Install the service-checker to the directory \"%s\"."
+      projectInstallQuestion="Try to install the service-checker to \"%s\"?"
+       projectInstallMessage="The installation was canceled by user → abort.."
 
 declare -A installableApps
     installPath="/usr/local/bin"
@@ -54,7 +56,14 @@ source "$pathRoot/lib/initInstall"
 source "$pathRoot/lib/fobDetection"
 
 if $GLOBAL_INSTALLATION; then
-    if gitInstall "$projectGitUri" "$projectPathRemote" "$projectInstallMessage" "$projectInstallSuccessMessage" "$projectInstallErrorMessage"; then
+    if gitInstall "$projectGitUri" \
+        "$projectPathRemote" \
+        "$projectInstallQuestion" \
+        "$projectInstallMessage" \
+        "$projectInstallSuccessMessage" \
+        "$projectInstallErrorMessage" \
+        "$projectInstallMessage"\
+    ; then
 
         # install all given apps
         for app in "${!installableApps[@]}"; do

@@ -38,40 +38,62 @@ if ! $friendsOfBashLibFound && [ ! -z $INSTALLATION ]; then
         friendsOfBashInclude="$friendsOfBashIncludeLocal"
     fi
 
+    cancelInstallation=false
+
     # ask the user
     while true; do
-        read -p "Try to install the friends of bash library to \"$friendsOfBashPath\". Type (y)es or (n)o: " -n 1 yn
+        read -p "Try to install the friends of bash library to \"$friendsOfBashPath\"? Type (y)es or (n)o: " -n 1 yn
         echo
         case $yn in
-            [Yy]* ) result=$(git clone "$friendsOfBashGitUri" "$friendsOfBashPath" 2>&1); break;;
-            [Nn]* ) exit;;
-            * ) echo "Please answer yes or no.";;
+            [Yy]* )
+                echo "Install friends of bash library to the directory \"$friendsOfBashPath\"."
+                result=$(git clone "$friendsOfBashGitUri" "$friendsOfBashPath" 2>&1)
+                break
+                ;;
+            [Nn]* )
+                echo "The installation was canceled by user."
+                cancelInstallation=true
+                break
+                ;;
+            * )
+                echo "Please type (y)es or (n)o."
+                ;;
         esac
     done
 
-    # git status is wrong
-    if [ $? -ne 0 ]; then
-        echo "Error occurred while installing the friends of bash library. The git was executed with status $?."
-        echo "$result"
-        exit 1
-    fi
+    if ! $cancelInstallation; then
 
-    # the fob folder was not found
-    if [ ! -d "$friendsOfBashPath" ]; then
-        echo "Error occurred while installing the friends of bash library. The folder \"$friendsOfBashPath\" was not found."
-        echo "$result"
-        exit 1
-    fi
+        # git status is wrong
+        if [ $? -ne 0 ]; then
+            echo "Error occurred while installing the friends of bash library. The git was executed with status $?."
+            echo "$result"
+            exit 1
+        fi
 
-    # the include file was not found
-    if [ ! -f "$friendsOfBashInclude"  ]; then
-        echo "Error occurred while installing the friends of bash library. The include file \"$friendsOfBashInclude\" was not found."
-        echo "$result"
-        exit 1
-    fi
+        # the fob folder was not found
+        if [ ! -d "$friendsOfBashPath" ]; then
+            echo "Error occurred while installing the friends of bash library. The folder \"$friendsOfBashPath\" was not found."
+            echo "$result"
+            exit 1
+        fi
 
-    # everything is fine
-    friendsOfBashLibFound=true
+        # the include file was not found
+        if [ ! -f "$friendsOfBashInclude"  ]; then
+            echo "Error occurred while installing the friends of bash library. The include file \"$friendsOfBashInclude\" was not found."
+            echo "$result"
+            exit 1
+        fi
+
+        # everything is fine
+        friendsOfBashLibFound=true
+
+    fi
+fi
+
+# script include mode: no friends of bash library detected → stop here
+if ! $friendsOfBashLibFound; then
+    echo "No friends of bash library found → Abort."
+    exit
 fi
 
 # script include: friends of bash library detected
