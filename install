@@ -53,9 +53,6 @@ source "$pathRoot/lib/initInstall"
 # detect friends of bash library → $friendsOfBashInclude
 source "$pathRoot/lib/fobDetection"
 
-# a success message
-log "success" "The friends of bash library was found in the folder \"$friendsOfBashPath\"."
-
 if $GLOBAL_INSTALLATION; then
     if gitInstall "$projectGitUri" "$projectPathRemote" "$projectInstallMessage" "$projectInstallSuccessMessage" "$projectInstallErrorMessage"; then
 

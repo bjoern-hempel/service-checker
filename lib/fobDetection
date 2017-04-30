@@ -83,3 +83,8 @@ fi
 # include the friends of bash library
 source "$friendsOfBashInclude"
 
+# a success message
+if [ ! -z $INSTALLATION ]; then
+    log "success" "The friends of bash library is available in the folder \"$friendsOfBashPath\"."
+fi
+
