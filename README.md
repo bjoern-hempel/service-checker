@@ -4,7 +4,7 @@ The service checker is a tool to do some server checks. It can send emails if an
 
 ## A.) First usage
 
-### A.1) local installation
+### A.1) local installation (e.g. into the own user directory)
 
 ```
 $ mkdir ~/service-checker
