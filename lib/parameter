@@ -206,7 +206,7 @@ while [[ $# > 0 ]]; do
         # help:  -h,    --help                    Shows this help.
         # help:
         -h|--help)
-            cat parameter | grep "# help:" | grep -v 'cat parameter' | sed 's/[ ]*# help:[ ]\?//g'
+            cat "$pathRoot/lib/parameter" | grep "# help:" | grep -v 'cat parameter' | sed 's/[ ]*# help:[ ]\?//g'
             setCachedValue "$INI_FILE" scriptIsRunning false
             exit 0
             ;;

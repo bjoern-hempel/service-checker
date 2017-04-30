@@ -19,7 +19,7 @@ dateFile=$(date +%Y-%m-%d_%H%M%S)
 CONFIG_ENVIRONMENT_FOLDER='/etc/service-checker'
   CONFIG_ENVIRONMENT_FILE='environments.conf'
      TMP_CONTENT_LOG_FILE="/tmp/service-checker.${dateFile}.log"
-                 INI_FILE="$pathRoot/config/config.ini"
+                 INI_FILE="/tmp/service-checker.ini"
 
 # create ini file if not exists
 if [ ! -f "$INI_FILE" ]; then

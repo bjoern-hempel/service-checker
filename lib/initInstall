@@ -1,0 +1,37 @@
+# initial values
+GLOBAL_INSTALLATION=false
+CREATE_SYMLINKS=false
+INSTALLATION=true
+ROOT_UID=0
+
+# declare parameter list array
+PARAMETERS=()
+
+# read arguments
+while [[ $# > 0 ]]; do
+    case "$1" in
+        # log option (2 parameter)
+        -g|--global)
+            GLOBAL_INSTALLATION=true
+        ;;
+
+        # treat all other parameter as normal parameter
+        *)
+            PARAMETERS+=("$1")
+        ;;
+    esac
+    shift
+done
+
+# the global mode needs root credentials
+if $GLOBAL_INSTALLATION && [ "$UID" -ne "$ROOT_UID" ]; then
+    echo "You need root credentials, if you want to make a global installation."
+    exit 1
+fi
+
+# the local mode doesn't need root credentials
+if ! $GLOBAL_INSTALLATION && [ "$UID" -eq "$ROOT_UID" ]; then
+    echo "You try to make a local installation with root credentials (sudo). Please use the global parameter (-g) for a global installation or install it as a normal user."
+    exit 1
+fi
+
