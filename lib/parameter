@@ -23,7 +23,7 @@ suppressDirectOutput=false
 
 # read arguments
 # help:
-# help: Usage: ./checker [options...] <ip>
+# help: Usage: %scriptname% [options...] <ip>
 while [[ $# > 0 ]]; do
     case "$1" in
         # help:  -p+,
@@ -206,7 +206,7 @@ while [[ $# > 0 ]]; do
         # help:  -h,    --help                    Shows this help.
         # help:
         -h|--help)
-            cat "$pathRoot/lib/parameter" | grep "# help:" | grep -v 'cat parameter' | sed 's/[ ]*# help:[ ]\?//g'
+            cat "$pathRoot/lib/parameter" | grep "# help:" | grep -v 'cat parameter' | sed 's/[ ]*# help:[ ]\?//g' | sed "s~%scriptname%~$scriptname~g"
             setCachedValue "$INI_FILE" scriptIsRunning false
             exit 0
             ;;

@@ -2,10 +2,17 @@
 
 # include the libraries
 if [ -h "${BASH_SOURCE[0]}" ]; then
-    filename=$(readlink ${BASH_SOURCE[0]})
+    filename=$(readlink "${BASH_SOURCE[0]}")
     pathRoot=$(dirname "$filename")"/.."
 else
     pathRoot="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/.."
+fi
+
+# get the scriptname
+if [[ "${BASH_SOURCE[0]}" =~ "/usr/local/bin" ]]; then
+    scriptname=$(basename "${BASH_SOURCE[0]}")
+else
+    scriptname="${BASH_SOURCE[0]}"
 fi
 
 # the friends of bash detection and function loader
