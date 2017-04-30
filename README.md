@@ -4,11 +4,35 @@ The service checker is a tool to do some server checks. It can send emails if an
 
 ## A.) First usage
 
-### A.1) installation
+### A.1) local installation
 
-TODO
+```
+$ mkdir ~/service-checker
+$ cd ~/service-checker
+$ git clone git://github.com/bjoern-hempel/service-checker.git .
+Klone nach '.'...
+remote: Counting objects: 252, done.
+remote: Compressing objects: 100% (120/120), done.
+remote: Total 252 (delta 74), reused 0 (delta 0), pack-reused 124
+Empfange Objekte: 100% (252/252), 50.06 KiB | 0 bytes/s, Fertig.
+Löse Unterschiede auf: 100% (140/140), Fertig.
+Prüfe Konnektivität... Fertig.
+$ ./install 
+Try to install the friends of bash library to "/home/bjoern/service-checker2/friends-of-bash". Type (y)es or (n)o: y
+[2017-04-30 15:36:07] [SUCCESS] The friends of bash library was found in the folder "/home/bjoern/service-checker2/friends-of-bash".
+[2017-04-30 15:36:07] [SUCCESS] The installation script was executed successfully.
+[2017-04-30 15:36:07] [INFO‧‧‧] Now you can use the service-checker with "bin/checker --help".
+$ bin/checker --help
 
-### A.2) show help
+Usage: ./checker [options...] <ip>
+...
+```
+
+### A.2) global installation
+
+
+
+### A.3) show help
 
 ```
 $ service-checker --help
