@@ -4,7 +4,9 @@ The service checker is a tool to do some server checks. It can send emails if an
 
 ## A.) First usage
 
-### A.1) local installation (e.g. into the own user directory)
+### A.1) local installation (no root credentials needed)
+
+For example if you want to install this checker into your own home directory or you don't have root credentials.
 
 ```
 $ mkdir ~/service-checker
@@ -28,9 +30,9 @@ Usage: ./checker [options...] <ip>
 ...
 ```
 
-### A.2) global installation
+### A.2) global installation (root credentials needed)
 
-
+TODO
 
 ### A.3) show help
 
