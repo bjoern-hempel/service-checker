@@ -28,6 +28,7 @@
 
 # some configs before
 pathRoot="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+scriptname="${BASH_SOURCE[0]}"
 
 # git settings
 friendsOfBashGitUri="git://github.com/bjoern-hempel/friends-of-bash.git"
@@ -50,19 +51,6 @@ declare -A installableApps
     installPath="/usr/local/bin"
      sourcePath="$projectPathRemote/bin"
 installableApps=([checker]=service-checker)
-
-# some needed applications
-applications=(git)
-
-# check applications
-for application in "${applications[@]}"; do
-    which $application >/dev/null
-
-    if [ "$?" -gt "0" ]; then
-        echo "Application \"$application\" is not installed. Please install it before. → Abort.."
-        exit
-    fi
-done
 
 # initialize the install process
 source "$pathRoot/lib/initInstall"
