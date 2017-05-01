@@ -6,7 +6,9 @@ The service checker is a tool to do some server checks. It can send emails if an
 
 ### A.1) the simplest way
 
-TODO
+```
+$ curl -sL https://www.ixno.de/service-checker/install | sudo -E bash -
+```
 
 ### A.2) global installation with git (root credentials needed)
 
