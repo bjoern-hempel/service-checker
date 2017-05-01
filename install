@@ -49,6 +49,19 @@ declare -A installableApps
      sourcePath="$projectPathRemote/bin"
 installableApps=([checker]=service-checker)
 
+# some needed applications
+applications=(git)
+
+# check applications
+for application in "${applications[@]}"; do
+    which $application >/dev/null
+
+    if [ "$?" -gt "0" ]; then
+        echo "Application \"$application\" is not installed. Please install it before. → Abort.."
+        exit
+    fi
+done
+
 # initialize the install process
 source "$pathRoot/lib/initInstall"
 
