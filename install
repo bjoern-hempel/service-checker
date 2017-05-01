@@ -31,7 +31,9 @@ pathRoot="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # git settings
 friendsOfBashGitUri="git://github.com/bjoern-hempel/friends-of-bash.git"
-projectGitUri="git://github.com/bjoern-hempel/service-checker.git"
+      projectGitUri="git://github.com/bjoern-hempel/service-checker.git"
+friendsOfBashGitZip="https://github.com/bjoern-hempel/friends-of-bash/archive/master.zip"
+      projectGitZip="https://github.com/bjoern-hempel/service-checker/archive/master.zip"
 
 # project settings
             projectPathLocal="$pathRoot"

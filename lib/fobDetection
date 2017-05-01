@@ -47,7 +47,10 @@ if ! $friendsOfBashLibFound && [ ! -z $INSTALLATION ]; then
         case $yn in
             [Yy]* )
                 echo "Install friends of bash library to the directory \"$friendsOfBashPath\"."
-                result=$(git clone "$friendsOfBashGitUri" "$friendsOfBashPath" 2>&1)
+                result=$(wget -q "$friendsOfBashGitZip" -O /tmp/friends-of-bash.zip)
+                result=$(unzip -qq /tmp/friends-of-bash.zip -d /tmp)
+                result=$(mv /tmp/friends-of-bash-master "$friendsOfBashPath")
+                result=$(rm /tmp/friends-of-bash.zip)
                 break
                 ;;
             [Nn]* )
