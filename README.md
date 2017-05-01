@@ -12,6 +12,15 @@ If you trust me, you can use this simple way to install the service-checker. Ple
 $ wget -O ~/sc-install -q https://www.ixno.de/service-checker/install && sudo bash ~/sc-install; rm -f ~/sc-install
 ```
 
+Now you can use the service-checker like this:
+
+```
+$ service-checker --help
+
+Usage: service-checker [options...] <ip>
+...
+```
+
 ### A.2) global installation with git (root credentials needed)
 
 ```
