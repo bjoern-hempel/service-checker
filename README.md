@@ -2,9 +2,46 @@
 
 The service checker is a tool to do some server checks. It can send emails if any check is failed. It can check the server accessibility, open and closed ports, assigned websites, returned http status codes, ssl certificates and so on. With the environment files you can easily use the checks with some cronjob tasks.
 
-## A.) First usage
+## A.) Installation
 
-### A.1) local installation (no root credentials needed)
+### A.1) the simplest way
+
+TODO
+
+### A.2) global installation with git (root credentials needed)
+
+```
+$ mkdir ~/service-checker
+$ cd ~/service-checker
+$ git clone git://github.com/bjoern-hempel/service-checker.git .
+Klone nach '.'...
+remote: Counting objects: 252, done.
+remote: Compressing objects: 100% (120/120), done.
+remote: Total 252 (delta 74), reused 0 (delta 0), pack-reused 124
+Empfange Objekte: 100% (252/252), 50.06 KiB | 0 bytes/s, Fertig.
+Löse Unterschiede auf: 100% (140/140), Fertig.
+Prüfe Konnektivität... Fertig.
+$ sudo ./install -g
+Try to install the friends of bash library to "/opt/friends-of-bash"? Type (y)es or (n)o: y
+Install friends of bash library to the directory "/opt/friends-of-bash".
+[2017-05-01 02:00:02] [SUCCESS] The friends of bash library is available in the folder "/opt/friends-of-bash".
+Try to install the service-checker to "/opt/service-checker"? Type (y)es or (n)o: y
+[2017-05-01 02:00:02] [INFO‧‧‧] The installation was canceled by user → abort..
+[2017-05-01 02:00:03] [SUCCESS] The service-checker is installed in the folder "/opt/service-checker".
+[2017-05-01 02:00:03] [INFO‧‧‧] ┏━  Try to install the given script
+                                ┃   /opt/service-checker/bin/checker to
+                                ┗━  /usr/local/bin/service-checker.
+[2017-05-01 02:00:03] [INFO‧‧‧] ┏━  The target file
+                                ┗━  /usr/local/bin/service-checker already exists.
+[2017-05-01 02:00:03] [SUCCESS] The installation script was executed successfully.
+[2017-05-01 02:00:03] [INFO‧‧‧] Now you can use the service-checker with "service-checker --help".
+$ service-checker --help
+
+Usage: service-checker [options...] <ip>
+...
+```
+
+### A.3) local installation with git (no root credentials needed)
 
 For example if you want to install this checker into your own home directory or you don't have root credentials.
 
@@ -20,21 +57,18 @@ Empfange Objekte: 100% (252/252), 50.06 KiB | 0 bytes/s, Fertig.
 Löse Unterschiede auf: 100% (140/140), Fertig.
 Prüfe Konnektivität... Fertig.
 $ ./install 
-Try to install the friends of bash library to "/home/bjoern/service-checker/friends-of-bash". Type (y)es or (n)o: y
-[2017-04-30 15:36:07] [SUCCESS] The friends of bash library is available in the folder "/home/bjoern/service-checker/friends-of-bash".
-[2017-04-30 15:36:07] [SUCCESS] The installation script was executed successfully.
-[2017-04-30 15:36:07] [INFO‧‧‧] Now you can use the service-checker with "bin/checker --help".
+Try to install the friends of bash library to "/home/bjoern/service-checker/friends-of-bash"? Type (y)es or (n)o: y
+Install friends of bash library to the directory "/home/bjoern/service-checker/friends-of-bash".
+[2017-05-01 02:03:02] [SUCCESS] The friends of bash library is available in the folder "/home/bjoern/service-checker/friends-of-bash".
+[2017-05-01 02:03:02] [SUCCESS] The installation script was executed successfully.
+[2017-05-01 02:03:02] [INFO‧‧‧] Now you can use the service-checker with "bin/checker --help".
 $ bin/checker --help
 
-Usage: ./checker [options...] <ip>
+Usage: bin/checker [options...] <ip>
 ...
 ```
 
-### A.2) global installation (root credentials needed)
-
-TODO
-
-### A.3) show help
+### A.4) show help
 
 ```
 $ service-checker --help
