@@ -9,7 +9,7 @@ The service checker is a tool to do some server checks. It can send emails if an
 If you trust me, you can use this simple way to install the service-checker. Please have a look at https://www.ixno.de/service-checker/install before, if you want to know what this script makes.
 
 ```
-$ wget https://www.ixno.de/service-checker/install -v -O ~/sc-install && chmod ug+x ~/sc-install && ~/sc-install; rm -rf ~/sc-install
+$ wget https://www.ixno.de/service-checker/install -q -O ~/sc-install && chmod ug+x ~/sc-install && ~/sc-install; rm -rf ~/sc-install
 ```
 
 ### A.2) global installation with git (root credentials needed)
