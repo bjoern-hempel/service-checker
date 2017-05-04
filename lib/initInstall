@@ -4,6 +4,11 @@ CREATE_SYMLINKS=false
 INSTALLATION=true
 ROOT_UID=0
 
+# the script was called directly from web → global installation
+if [ ! -z $WEB_INSTALL ] && $WEB_INSTALL; then
+    GLOBAL_INSTALLATION=true
+fi
+
 # declare parameter list array
 PARAMETERS=()
 
