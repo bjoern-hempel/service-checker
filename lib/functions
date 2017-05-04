@@ -104,7 +104,7 @@ environmentLoader()
         # read the input
         while true; do
             echo
-            echo -e  "The following system test environments are available:"
+            echo -e  "The following system test environments are available ($configFile):"
             echo
             echo -en "$environmentList"
             echo
