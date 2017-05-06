@@ -122,6 +122,8 @@ user$ service-checker 138.201.93.253
 
 ### 1.2) disable the ping check
 
+Disable the ping check (-dp).
+
 ```
 $ service-checker 138.201.93.253 -dp
 [2017-05-07 01:38:55] [PASSED]  [overall]                                    All checks passed.
