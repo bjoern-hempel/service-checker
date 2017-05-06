@@ -9,13 +9,13 @@ The service checker is a tool to do some server checks. It can send emails if an
 If you trust me, you can use this simple way to install the service-checker. Please have a look at https://www.ixno.de/service-checker/install before, if you want to know what this script makes.
 
 ```
-$ wget -O ~/sc-install -q https://www.ixno.de/service-checker/install && sudo bash ~/sc-install; rm -f ~/sc-install
+user$ wget -O ~/sc-install -q https://www.ixno.de/service-checker/install && sudo bash ~/sc-install; rm -f ~/sc-install
 ```
 
 Now you can use the service-checker like this:
 
 ```
-$ service-checker --help
+user$ service-checker --help
 
 Usage: service-checker [options...] <ip>
 ...
@@ -24,13 +24,13 @@ Usage: service-checker [options...] <ip>
 ### A.2) global installation with git (root credentials needed)
 
 ```
-$ mkdir ~/service-checker
-$ cd ~/service-checker
-$ git clone git://github.com/bjoern-hempel/service-checker.git .
-$ sudo ./install -g
-$ cd ..
-$ rm -r service-checker
-$ service-checker --help
+user$ mkdir ~/service-checker
+user$ cd ~/service-checker
+user$ git clone git://github.com/bjoern-hempel/service-checker.git .
+user$ sudo ./install -g
+user$ cd ..
+user$ rm -r service-checker
+user$ service-checker --help
 
 Usage: service-checker [options...] <ip>
 ...
@@ -41,11 +41,11 @@ Usage: service-checker [options...] <ip>
 For example if you want to install this checker into your own home directory or you don't have root credentials.
 
 ```
-$ mkdir ~/service-checker
-$ cd ~/service-checker
-$ git clone git://github.com/bjoern-hempel/service-checker.git .
-$ ./install
-$ bin/checker --help
+user$ mkdir ~/service-checker
+user$ cd ~/service-checker
+user$ git clone git://github.com/bjoern-hempel/service-checker.git .
+user$ ./install
+user$ bin/checker --help
 
 Usage: bin/checker [options...] <ip>
 ...
@@ -54,7 +54,7 @@ Usage: bin/checker [options...] <ip>
 ### A.4) show help
 
 ```
-$ service-checker --help
+user$ service-checker --help
 
 Usage: service-checker [options...] <ip>
  -p+,
@@ -110,12 +110,35 @@ Usage: service-checker [options...] <ip>
 
 ## 1.) examples
 
+### 1.1) check that given system is awake (ping check)
+
+Check ip 138.201.93.253.
+
+```
+user$ service-checker 138.201.93.253
+[2017-05-07 01:12:13] [PASSED]  [system.awake]                               The system with ip 138.201.93.253 is running
+[2017-05-07 01:12:13] [PASSED]  [overall]                                    All checks passed.
+```
+
+### 1.2) check that given ports are reachable
+
+Check that the ports 22, 80 and 443 are open.
+
+```
+user$ service-checker 138.201.93.253 -p+ 22 -p+ 80 -p+ 443
+[2017-05-07 01:19:04] [PASSED]  [system.awake]                               The system with ip 138.201.93.253 is running
+[2017-05-07 01:19:04] [PASSED]  [ports.positive.22]                          The port "22" on system with ip "138.201.93.253" is open.
+[2017-05-07 01:19:04] [PASSED]  [ports.positive.80]                          The port "80" on system with ip "138.201.93.253" is open.
+[2017-05-07 01:19:04] [PASSED]  [ports.positive.443]                         The port "443" on system with ip "138.201.93.253" is open.
+[2017-05-07 01:19:04] [PASSED]  [overall]                                    All checks passed.
+```
+
 ### 1.1) simple ip and port check
 
 Check ip 138.201.93.253, that the ports 22, 80, 443 are opened and the port 3306 is closed.
 
 ```
-$ service-checker -p+ 22 -p+ 80 -p+ 443 -p- 3306 138.201.93.253
+user$ service-checker -p+ 22 -p+ 80 -p+ 443 -p- 3306 138.201.93.253
 [2017-03-12 16:52:42] [PASSED‧] The system with ip 138.201.93.253 is running
 [2017-03-12 16:52:42] [PASSED‧] The port "22" on system with ip "138.201.93.253" is open.
 [2017-03-12 16:52:42] [PASSED‧] The port "80" on system with ip "138.201.93.253" is open.
