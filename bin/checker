@@ -88,10 +88,12 @@ fi
 allPassed=true
 
 # check if server is running
-if isPingableCheck "$ip"; then
-    pingable=true
-else
-    allPassed=false
+if $pingEnabled; then
+    if isPingableCheck "$ip"; then
+        pingable=true
+    else
+        allPassed=false
+    fi
 fi
 
 # check positive ports

@@ -20,6 +20,7 @@ emailRelay="direct"
 timeOutEmailDelivery=1800 # half an hour
 identifier=""
 suppressDirectOutput=false
+pingEnabled=true
 
 # read arguments
 # help:
@@ -191,6 +192,12 @@ while [[ $# > 0 ]]; do
             ;;
         -id=*|--identifier=*)
             identifier="${1#*=}"
+            ;;
+
+        # help:  -dp,   --disable-ping            Disable the ping check.
+        # help:
+        -dp|--disable-ping)
+            pingEnabled=false
             ;;
 
         # help:  -sdo,  --suppress-direct-output  1 - Suppress all directly printed outputs to screen (excluding log outputs, etc.); 0 - Don't suppress
