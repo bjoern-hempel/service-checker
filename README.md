@@ -120,7 +120,14 @@ user$ service-checker 138.201.93.253
 [2017-05-07 01:12:13] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.2) check that given ports are reachable
+### 1.2) disable the ping check
+
+```
+$ service-checker 138.201.93.253 -dp
+[2017-05-07 01:38:55] [PASSED]  [overall]                                    All checks passed.
+```
+
+### 1.3) check that given ports are reachable
 
 Check that the ports 22, 80 and 443 are open.
 
@@ -133,7 +140,7 @@ user$ service-checker 138.201.93.253 -p+ 22 -p+ 80 -p+ 443
 [2017-05-07 01:19:04] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.1) simple ip and port check
+### 1.4) simple ip and port check
 
 Check ip 138.201.93.253, that the ports 22, 80, 443 are opened and the port 3306 is closed.
 
