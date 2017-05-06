@@ -102,10 +102,11 @@ Usage: service-checker [options...] <ip>
  -log,  --log-file                Adds the log output.
  -id,   --identifier              An optional identifier which will be used for some information channels like email, etc. (if not given it uses the ip address)
 
+ -dp,   --disable-ping            Disable the ping check.
+
  -sdo,  --suppress-direct-output  1 - Suppress all directly printed outputs to screen (excluding log outputs, etc.); 0 - Don't suppress
 
  -h,    --help                    Shows this help.
- 
 ```
 
 ## 1.) examples
