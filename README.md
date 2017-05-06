@@ -28,6 +28,8 @@ $ mkdir ~/service-checker
 $ cd ~/service-checker
 $ git clone git://github.com/bjoern-hempel/service-checker.git .
 $ sudo ./install -g
+$ cd ..
+$ rm -r service-checker
 $ service-checker --help
 
 Usage: service-checker [options...] <ip>
