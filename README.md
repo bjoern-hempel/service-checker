@@ -4,7 +4,7 @@ The service checker is a tool to do some server checks. It can send emails if an
 
 ## A.) Installation
 
-### A.1) the simplest way
+### A.1) The simplest way
 
 If you trust me, you can use this simple way to install the service-checker. Please have a look at https://www.ixno.de/service-checker/install before, if you want to know what this script makes.
 
@@ -21,7 +21,7 @@ Usage: service-checker [options...] <ip>
 ...
 ```
 
-### A.2) global installation with git (root credentials needed)
+### A.2) Global installation with git (root credentials needed)
 
 ```
 user$ mkdir ~/service-checker
@@ -36,7 +36,7 @@ Usage: service-checker [options...] <ip>
 ...
 ```
 
-### A.3) local installation with git (no root credentials needed)
+### A.3) Local installation with git (no root credentials needed)
 
 For example if you want to install this checker into your own home directory or you don't have root credentials.
 
@@ -51,7 +51,7 @@ Usage: bin/checker [options...] <ip>
 ...
 ```
 
-### A.4) show help
+### A.4) Show help
 
 ```
 user$ service-checker --help
@@ -109,11 +109,11 @@ Usage: service-checker [options...] <ip>
  -h,    --help                    Shows this help.
 ```
 
-## 1.) examples
+## 1.) Usage
 
-### 1.1) ping check
+### 1.1) Ping check
 
-#### 1.1.1) check that given system is awake (ping check)
+#### 1.1.1) Check that given system is awake (ping check)
 
 Check ip 46.163.114.68.
 
@@ -123,7 +123,7 @@ user$ service-checker 46.163.114.68
 [2017-05-07 01:12:13] [PASSED]  [overall]                                    All checks passed.
 ```
 
-#### 1.1.2) disable the ping check
+#### 1.1.2) Disable the ping check
 
 Disable the ping check (-dp).
 
@@ -132,9 +132,9 @@ $ service-checker 46.163.114.68 -dp
 [2017-05-07 01:38:55] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.2) port checks
+### 1.2) Port checks
 
-#### 1.2.1) check that given ports are reachable
+#### 1.2.1) Check that given ports are reachable
 
 Check that the ports 22, 80 and 443 are open (-p+).
 
@@ -147,7 +147,7 @@ user$ service-checker 46.163.114.68 -p+ 22 -p+ 80 -p+ 443
 [2017-05-07 01:19:04] [PASSED]  [overall]                                    All checks passed.
 ```
 
-#### 1.2.2) check that given ports are not reachable
+#### 1.2.2) Check that given ports are not reachable
 
 Port 111 and 25 should be closed (-p-).
 
@@ -158,9 +158,9 @@ $ service-checker 46.163.114.68 -p- 111 -p- 25
 [2017-05-07 01:45:43] [PASSED]  [ports.negative.25]                          The port "25" on system with ip "46.163.114.68" is closed.
 [2017-05-07 01:45:43] [PASSED]  [overall]                                    All checks passed.
 ```
-### 1.3) dns checks
+### 1.3) DNS checks
 
-#### 1.3.1) check that the given domains is assigned to the ip
+#### 1.3.1) A-record check
 
 The given domains should be assigned to the ip 46.163.114.68.
 
@@ -172,9 +172,17 @@ user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -dn bienenfuettern
 [2017-05-07 02:08:15] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.4) webserver status code checks
+#### 1.3.2) MX-record check
 
-#### 1.4.1) simple status code check with root path (/)
+TODO...
+
+#### 1.3.3) TXT-record check (SPF check)
+
+TODO...
+
+### 1.4) Webserver status code checks
+
+#### 1.4.1) Simple status code check with root path (/)
 
 Check that the uri https://www.bienenfuettern.de returns a 200 status code.
 
@@ -186,7 +194,7 @@ user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -ssc 200
 [2017-05-07 14:07:42] [PASSED]  [overall]                                    All checks passed.
 ```
 
-#### 1.4.2) simple status code check with given path
+#### 1.4.2) Simple status code check with given path
 
 Check that for example the backend is not available or at least password protected. For example /typo3. Unsecure connection should be redirected.
 
@@ -202,7 +210,7 @@ user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -ssc 404,401:/typo
 [2017-05-07 14:46:38] [PASSED]  [overall]                                    All checks passed.
 ```
 
-#### 1.4.3) check multiple status codes
+#### 1.4.3) Check multiple status codes
 
 Unsecure connections must be redirected to the secure one (https://www.bienenfuettern.de). The TLD-Domain without beginning www (bienenfuettern.de) must be redirected to the one with www. The secure connection must than serve a 200 status code.
 
@@ -224,9 +232,13 @@ user$ service-checker 46.163.114.68 -dn bienenfuettern.de -sc 301=https://www.bi
 [2017-05-07 14:12:47] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.5) ssl certificates
+### 1.5) SSL certificates
 
-### 1.8) a combination of ip, port, domain, status code and ssl check
+#### 1.5.1) Check validity, expiring date, etc.
+
+TODO...
+
+### 1.6) A combination of ip, port, domain, status code and ssl checks
 
 Check ip 83.169.16.166; Ports 10022, 80 and 443 must be opened; Ports 3306 and 111 must be closed; inter.apo-ident.de and www.inter.apo-ident.de must be assigned to the ip; Unsecure connections must be redirected to the secure one (https://inter.apo-ident.de); Secure connections must serve a 200 status code; The certificates must be valid
 
@@ -255,11 +267,15 @@ $ service-checker 83.169.16.166 -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
 [2017-03-12 16:43:39] [PASSED‧] All checks passed.
 ```
 
-## 2.) use environments
+## 2.) Logging
+
+## 3.) Notifications
+
+## 4.) Use environments
 
 The checker script uses the environments.conf inside the root folder (mostly inside the folder /opt/service-checker) or directly from /etc/service-checker/environments.conf. You can find some examples within the file environments.conf.dist. With the environment files you can save some server check settings without entering every time the check configs. Instead you can use an environment name or the a selection list to start the test.
 
-### 2.1) example content for environments.conf
+### 2.1) Example content for environments.conf
 
 ```
 # METRO PPD (live):
@@ -292,7 +308,7 @@ metroppd {
 }
 ```
 
-### 2.2) usage (with choice)
+### 2.2) Usage (with choice)
 
 ```
 $ service-checker 
@@ -342,7 +358,7 @@ Choose the environment number you would like to test: 2
 [2017-04-25 01:52:44] [INFO]   Ignore sending success mail to bjoern.hempel@ressourcenmangel.de (no error mail before) (identifier: metroppd).
 ```
 
-### 2.3) usage (directly use the choice)
+### 2.3) Usage (directly use the choice)
 
 ```
 user$ service-checker metroppd
