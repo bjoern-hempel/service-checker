@@ -111,7 +111,9 @@ Usage: service-checker [options...] <ip>
 
 ## 1.) examples
 
-### 1.1) check that given system is awake (ping check)
+### 1.1) ping check
+
+#### 1.1.1) check that given system is awake (ping check)
 
 Check ip 46.163.114.68.
 
@@ -121,7 +123,7 @@ user$ service-checker 46.163.114.68
 [2017-05-07 01:12:13] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.2) disable the ping check
+#### 1.1.2) disable the ping check
 
 Disable the ping check (-dp).
 
@@ -169,6 +171,35 @@ user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -dn bienenfuettern
 
 ### 1.6) check status codes
 
+Check that the uri https://www.bienenfuettern.de returns a 200 status code.
+
+```
+user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -ssc 200
+[2017-05-07 14:07:41] [PASSED]  [system.awake]                               The system with ip 46.163.114.68 is running
+[2017-05-07 14:07:41] [PASSED]  [domains.www.bienenfuettern.de]              The given domain "www.bienenfuettern.de" is assigned to ip "46.163.114.68".
+[2017-05-07 14:07:42] [PASSED]  [statusCodes.case1]                          The url "https://www.bienenfuettern.de" returns the expected status code "200".
+[2017-05-07 14:07:42] [PASSED]  [overall]                                    All checks passed.
+```
+
+### 1.7) check multiple status codes
+
+```
+user$ service-checker 46.163.114.68 -dn bienenfuettern.de -sc 301=https://www.bienenfuettern.de -ssc 301=https://www.bienenfuettern.de -dn www.bienenfuettern.de -sc 301=https://www.bienenfuettern.de -ssc 200
+[2017-05-07 14:12:46] [PASSED]  [system.awake]                               The system with ip 46.163.114.68 is running
+[2017-05-07 14:12:46] [PASSED]  [domains.bienenfuettern.de]                  The given domain "bienenfuettern.de" is assigned to ip "46.163.114.68".
+[2017-05-07 14:12:46] [PASSED]  [domains.www.bienenfuettern.de]              The given domain "www.bienenfuettern.de" is assigned to ip "46.163.114.68".
+[2017-05-07 14:12:46] [PASSED]  [statusCodes.case1]                          ┏━  The url "http://www.bienenfuettern.de" returns the expected status code "301".
+                                                                             ┃   The url "http://www.bienenfuettern.de" returns the given compare string:
+                                                                             ┗━  "https://www.bienenfuettern.de".
+[2017-05-07 14:12:47] [PASSED]  [statusCodes.case2]                          The url "https://www.bienenfuettern.de" returns the expected status code "200".
+[2017-05-07 14:12:47] [PASSED]  [statusCodes.case3]                          ┏━  The url "https://bienenfuettern.de" returns the expected status code "301".
+                                                                             ┃   The url "https://bienenfuettern.de" returns the given compare string:
+                                                                             ┗━  "https://www.bienenfuettern.de".
+[2017-05-07 14:12:47] [PASSED]  [statusCodes.case4]                          ┏━  The url "http://bienenfuettern.de" returns the expected status code "301".
+                                                                             ┃   The url "http://bienenfuettern.de" returns the given compare string:
+                                                                             ┗━  "https://www.bienenfuettern.de".
+[2017-05-07 14:12:47] [PASSED]  [overall]                                    All checks passed.
+```
 
 ### 1.7) check ssl certificates
 
