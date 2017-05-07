@@ -188,21 +188,23 @@ user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -ssc 200
 
 #### 1.4.2) simple status code check with given path
 
-Check that the backend is not directly available.
+Check that for example the backend is not available or at least password protected. For example /typo3. Unsecure connection should be redirected.
 
 ```
-user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -ssc 404,401:/typo3 -sc 301
-[2017-05-07 14:36:34] [PASSED]  [system.awake]                               The system with ip 46.163.114.68 is running
-[2017-05-07 14:36:34] [PASSED]  [domains.www.bienenfuettern.de]              The given domain "www.bienenfuettern.de" is assigned to ip "46.163.114.68".
-[2017-05-07 14:36:34] [PASSED]  [statusCodes.case1]                          ┏━  The url "https://www.bienenfuettern.de/typo3" returns the expected status code "404"
+user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -ssc 404,401:/typo3 -sc 301=https://www.bienenfuettern.de/typo3:/typo3
+[2017-05-07 14:46:37] [PASSED]  [system.awake]                               The system with ip 46.163.114.68 is running
+[2017-05-07 14:46:37] [PASSED]  [domains.www.bienenfuettern.de]              The given domain "www.bienenfuettern.de" is assigned to ip "46.163.114.68".
+[2017-05-07 14:46:37] [PASSED]  [statusCodes.case1]                          ┏━  The url "https://www.bienenfuettern.de/typo3" returns the expected status code "404"
                                                                              ┗━  (one of the expected ports: 404, 401).
-[2017-05-07 14:36:35] [PASSED]  [statusCodes.case2]                          The url "http://www.bienenfuettern.de" returns the expected status code "301".
-[2017-05-07 14:36:35] [PASSED]  [overall]                                    All checks passed.
+[2017-05-07 14:46:38] [PASSED]  [statusCodes.case2]                          ┏━  The url "http://www.bienenfuettern.de/typo3" returns the expected status code "301".
+                                                                             ┃   The url "http://www.bienenfuettern.de/typo3" returns the given compare string:
+                                                                             ┗━  "https://www.bienenfuettern.de/typo3".
+[2017-05-07 14:46:38] [PASSED]  [overall]                                    All checks passed.
 ```
 
 #### 1.4.3) check multiple status codes
 
-Unsecure connections must be redirected to the secure one (https://www.bienenfuettern.de). Domain without beginning www must be redirected to the one with www. The secure connection must serve a 200 status code.
+Unsecure connections must be redirected to the secure one (https://www.bienenfuettern.de). The TLD-Domain without beginning www (bienenfuettern.de) must be redirected to the one with www. The secure connection must than serve a 200 status code.
 
 ```
 user$ service-checker 46.163.114.68 -dn bienenfuettern.de -sc 301=https://www.bienenfuettern.de -ssc 301=https://www.bienenfuettern.de -dn www.bienenfuettern.de -sc 301=https://www.bienenfuettern.de -ssc 200
