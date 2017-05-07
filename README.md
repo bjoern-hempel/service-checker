@@ -414,5 +414,5 @@ user$ service-checker metroppd
 
 ## License
 
-ISC © [Björn Hempel](https://www.ixno.de)
+MIT © [Björn Hempel](https://www.ixno.de)
 # 
