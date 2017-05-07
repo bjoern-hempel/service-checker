@@ -236,7 +236,21 @@ user$ service-checker 46.163.114.68 -dn bienenfuettern.de -sc 301=https://www.bi
 
 #### 1.5.1) Check validity, expiring date, etc.
 
-TODO...
+Check the chain file, certificate file, the validity, the expiring date, the domain name and the activated ocsp.
+
+```
+user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -ssl
+[2017-05-07 15:09:05] [PASSED]  [system.awake]                               The system with ip 46.163.114.68 is running
+[2017-05-07 15:09:05] [PASSED]  [domains.www.bienenfuettern.de]              The given domain "www.bienenfuettern.de" is assigned to ip "46.163.114.68".
+[2017-05-07 15:09:05] [PASSED]  [certificates.www.bienenfuettern.de.verif..] The certificate from the domain "www.bienenfuettern.de" was successfully verified.
+[2017-05-07 15:09:05] [PASSED]  [certificates.www.bienenfuettern.de.chain]   ┏━  The chainfile from the issuer
+                                                                             ┃   "/C=US/O=Let's Encrypt/CN=Let's Encrypt Authority X3"
+                                                                             ┗━  was successfully verified.
+[2017-05-07 15:09:06] [PASSED]  [certificates.www.bienenfuettern.de.valid]   The certificate from the domain "www.bienenfuettern.de" is valid until "2017-06-25 21:44".
+[2017-05-07 15:09:06] [PASSED]  [certificates.www.bienenfuettern.de.domai..] The domain "www.bienenfuettern.de" validate the domain name in certificate file.
+[2017-05-07 15:09:06] [PASSED]  [certificates.www.bienenfuettern.de.ocsp]    The ocsp is activated on domain "www.bienenfuettern.de" ("http://ocsp.int-x3.letsencrypt.org/").
+[2017-05-07 15:09:06] [PASSED]  [overall]                                    All checks passed.
+```
 
 ### 1.6) A combination of ip, port, domain, status code and ssl checks
 
