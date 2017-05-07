@@ -275,7 +275,7 @@ $ service-checker 83.169.16.166 -p+ 10022 -p+ 80 -p+ 443 -p- 3306 -p- 111 \
 
 The checker script uses the environments.conf inside the root folder (mostly inside the folder /opt/service-checker) or directly from /etc/service-checker/environments.conf. You can find some examples within the file environments.conf.dist. With the environment files you can save some server check settings without entering every time the check configs. Instead you can use an environment name or the a selection list to start the test.
 
-### 2.1) Example content for environments.conf
+### 4.1) Example content for environments.conf
 
 ```
 # METRO PPD (live):
@@ -308,7 +308,7 @@ metroppd {
 }
 ```
 
-### 2.2) Usage (with choice)
+### 4.2) Usage (with choice)
 
 ```
 $ service-checker 
@@ -358,7 +358,7 @@ Choose the environment number you would like to test: 2
 [2017-04-25 01:52:44] [INFO]   Ignore sending success mail to bjoern.hempel@ressourcenmangel.de (no error mail before) (identifier: metroppd).
 ```
 
-### 2.3) Usage (directly use the choice)
+### 4.3) Usage (directly use the choice)
 
 ```
 user$ service-checker metroppd
@@ -397,3 +397,8 @@ user$ service-checker metroppd
 [2017-04-25 01:53:34] [PASSED] [overall]                                    All checks passed.
 [2017-04-25 01:53:34] [INFO]   Ignore sending success mail to bjoern.hempel@ressourcenmangel.de (no error mail before) (identifier: metroppd).
 ```
+
+## License
+
+ISC © [Björn Hempel](https://www.ixno.de)
+# 
