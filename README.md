@@ -155,6 +155,18 @@ $ service-checker 46.163.114.68 -p- 111 -p- 25
 [2017-05-07 01:45:43] [PASSED]  [overall]                                    All checks passed.
 ```
 
+### 1.5) check that the given domains is assigned to the ip
+
+The given domains are assigned.
+
+```
+user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -dn bienenfuettern.de
+[2017-05-07 02:08:15] [PASSED]  [system.awake]                               The system with ip 46.163.114.68 is running
+[2017-05-07 02:08:15] [PASSED]  [domains.bienenfuettern.de]                  The given domain "bienenfuettern.de" is assigned to ip "46.163.114.68".
+[2017-05-07 02:08:15] [PASSED]  [domains.www.bienenfuettern.de]              The given domain "www.bienenfuettern.de" is assigned to ip "46.163.114.68".
+[2017-05-07 02:08:15] [PASSED]  [overall]                                    All checks passed.
+```
+
 ### 1.6) ip, port, domain, status code and ssl check
 
 Check ip 83.169.16.166; Ports 10022, 80 and 443 must be opened; Ports 3306 and 111 must be closed; inter.apo-ident.de and www.inter.apo-ident.de must be assigned to the ip; Unsecure connections must be redirected to the secure one (https://inter.apo-ident.de); Secure connections must serve a 200 status code; The certificates must be valid
