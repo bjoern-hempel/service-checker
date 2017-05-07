@@ -5,23 +5,29 @@
 #
 # @author    Björn Hempel <bjoern@hempel.li>
 # @date      2017-04-26
-# @version   1.0
+# @version   1.0 (2017-05-07)
 #
-# @copyright ISC License
+# @copyright MIT License
 # @copyright
-# @copyright Copyright (c) 2017, Björn Hempel
+# @copyright Copyright (c) 2017 Björn Hempel
 # @copyright
-# @copyright Permission to use, copy, modify, and/or distribute this software for any
-# @copyright purpose with or without fee is hereby granted, provided that the above
-# @copyright copyright notice and this permission notice appear in all copies.
+# @copyright Permission is hereby granted, free of charge, to any person obtaining a copy
+# @copyright of this software and associated documentation files (the "Software"), to deal
+# @copyright in the Software without restriction, including without limitation the rights
+# @copyright to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# @copyright copies of the Software, and to permit persons to whom the Software is
+# @copyright furnished to do so, subject to the following conditions:
 # @copyright
-# @copyright THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-# @copyright REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-# @copyright AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-# @copyright INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-# @copyright LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
-# @copyright OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-# @copyright PERFORMANCE OF THIS SOFTWARE.
+# @copyright The above copyright notice and this permission notice shall be included in all
+# @copyright copies or substantial portions of the Software.
+# @copyright
+# @copyright THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# @copyright IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# @copyright FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# @copyright AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# @copyright LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# @copyright OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# @copyright SOFTWARE.
 # @copyright
 # @copyright Written by Björn Hempel <bjoern@hempel.li>.
 # ------------
