@@ -113,11 +113,11 @@ Usage: service-checker [options...] <ip>
 
 ### 1.1) check that given system is awake (ping check)
 
-Check ip 138.201.93.253.
+Check ip 46.163.114.68.
 
 ```
-user$ service-checker 138.201.93.253
-[2017-05-07 01:12:13] [PASSED]  [system.awake]                               The system with ip 138.201.93.253 is running
+user$ service-checker 46.163.114.68
+[2017-05-07 01:12:13] [PASSED]  [system.awake]                               The system with ip 46.163.114.68 is running
 [2017-05-07 01:12:13] [PASSED]  [overall]                                    All checks passed.
 ```
 
@@ -126,7 +126,7 @@ user$ service-checker 138.201.93.253
 Disable the ping check (-dp).
 
 ```
-$ service-checker 138.201.93.253 -dp
+$ service-checker 46.163.114.68 -dp
 [2017-05-07 01:38:55] [PASSED]  [overall]                                    All checks passed.
 ```
 
@@ -135,11 +135,11 @@ $ service-checker 138.201.93.253 -dp
 Check that the ports 22, 80 and 443 are open (-p+).
 
 ```
-user$ service-checker 138.201.93.253 -p+ 22 -p+ 80 -p+ 443
-[2017-05-07 01:19:04] [PASSED]  [system.awake]                               The system with ip 138.201.93.253 is running
-[2017-05-07 01:19:04] [PASSED]  [ports.positive.22]                          The port "22" on system with ip "138.201.93.253" is open.
-[2017-05-07 01:19:04] [PASSED]  [ports.positive.80]                          The port "80" on system with ip "138.201.93.253" is open.
-[2017-05-07 01:19:04] [PASSED]  [ports.positive.443]                         The port "443" on system with ip "138.201.93.253" is open.
+user$ service-checker 46.163.114.68 -p+ 22 -p+ 80 -p+ 443
+[2017-05-07 01:19:04] [PASSED]  [system.awake]                               The system with ip 46.163.114.68 is running
+[2017-05-07 01:19:04] [PASSED]  [ports.positive.22]                          The port "22" on system with ip "46.163.114.68" is open.
+[2017-05-07 01:19:04] [PASSED]  [ports.positive.80]                          The port "80" on system with ip "46.163.114.68" is open.
+[2017-05-07 01:19:04] [PASSED]  [ports.positive.443]                         The port "443" on system with ip "46.163.114.68" is open.
 [2017-05-07 01:19:04] [PASSED]  [overall]                                    All checks passed.
 ```
 
@@ -148,25 +148,11 @@ user$ service-checker 138.201.93.253 -p+ 22 -p+ 80 -p+ 443
 Port 111 and 25 should be closed (-p-).
 
 ```
-$ service-checker 138.201.93.253 -p- 111 -p- 25
-[2017-05-07 01:19:04] [PASSED]  [system.awake]                               The system with ip 138.201.93.253 is running
-[2017-05-07 01:45:41] [PASSED]  [ports.negative.111]                         The port "111" on system with ip "138.201.93.253" is closed.
-[2017-05-07 01:45:43] [PASSED]  [ports.negative.25]                          The port "25" on system with ip "138.201.93.253" is closed.
+$ service-checker 46.163.114.68 -p- 111 -p- 25
+[2017-05-07 01:19:04] [PASSED]  [system.awake]                               The system with ip 46.163.114.68 is running
+[2017-05-07 01:45:41] [PASSED]  [ports.negative.111]                         The port "111" on system with ip "46.163.114.68" is closed.
+[2017-05-07 01:45:43] [PASSED]  [ports.negative.25]                          The port "25" on system with ip "46.163.114.68" is closed.
 [2017-05-07 01:45:43] [PASSED]  [overall]                                    All checks passed.
-```
-
-### 1.5) simple ip and port check
-
-Check ip 138.201.93.253, that the ports 22, 80, 443 are opened and the port 3306 is closed.
-
-```
-user$ service-checker -p+ 22 -p+ 80 -p+ 443 -p- 3306 138.201.93.253
-[2017-03-12 16:52:42] [PASSED‧] The system with ip 138.201.93.253 is running
-[2017-03-12 16:52:42] [PASSED‧] The port "22" on system with ip "138.201.93.253" is open.
-[2017-03-12 16:52:42] [PASSED‧] The port "80" on system with ip "138.201.93.253" is open.
-[2017-03-12 16:52:42] [PASSED‧] The port "443" on system with ip "138.201.93.253" is open.
-[2017-03-12 16:52:42] [PASSED‧] The port "3306" on system with ip "138.201.93.253" is closed.
-[2017-03-12 16:52:42] [PASSED‧] All checks passed.
 ```
 
 ### 1.6) ip, port, domain, status code and ssl check
