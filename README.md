@@ -132,7 +132,9 @@ $ service-checker 46.163.114.68 -dp
 [2017-05-07 01:38:55] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.3) check that given ports are reachable
+### 1.2) port checks
+
+#### 1.2.1) check that given ports are reachable
 
 Check that the ports 22, 80 and 443 are open (-p+).
 
@@ -145,7 +147,7 @@ user$ service-checker 46.163.114.68 -p+ 22 -p+ 80 -p+ 443
 [2017-05-07 01:19:04] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.4) check that given ports are not reachable
+#### 1.2.2) check that given ports are not reachable
 
 Port 111 and 25 should be closed (-p-).
 
@@ -156,8 +158,9 @@ $ service-checker 46.163.114.68 -p- 111 -p- 25
 [2017-05-07 01:45:43] [PASSED]  [ports.negative.25]                          The port "25" on system with ip "46.163.114.68" is closed.
 [2017-05-07 01:45:43] [PASSED]  [overall]                                    All checks passed.
 ```
+### 1.3) dns checks
 
-### 1.5) check that the given domains is assigned to the ip
+#### 1.3.1) check that the given domains is assigned to the ip
 
 The given domains should be assigned to the ip 46.163.114.68.
 
@@ -169,7 +172,9 @@ user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -dn bienenfuettern
 [2017-05-07 02:08:15] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.6) check status codes
+### 1.4) webserver status code checks
+
+#### 1.4.1) simple status code check with root path (/)
 
 Check that the uri https://www.bienenfuettern.de returns a 200 status code.
 
@@ -181,7 +186,23 @@ user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -ssc 200
 [2017-05-07 14:07:42] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.7) check multiple status codes
+#### 1.4.2) simple status code check with given path
+
+Check that the backend is not directly available.
+
+```
+user$ service-checker 46.163.114.68 -dn www.bienenfuettern.de -ssc 404,401:/typo3 -sc 301
+[2017-05-07 14:36:34] [PASSED]  [system.awake]                               The system with ip 46.163.114.68 is running
+[2017-05-07 14:36:34] [PASSED]  [domains.www.bienenfuettern.de]              The given domain "www.bienenfuettern.de" is assigned to ip "46.163.114.68".
+[2017-05-07 14:36:34] [PASSED]  [statusCodes.case1]                          ┏━  The url "https://www.bienenfuettern.de/typo3" returns the expected status code "404"
+                                                                             ┗━  (one of the expected ports: 404, 401).
+[2017-05-07 14:36:35] [PASSED]  [statusCodes.case2]                          The url "http://www.bienenfuettern.de" returns the expected status code "301".
+[2017-05-07 14:36:35] [PASSED]  [overall]                                    All checks passed.
+```
+
+#### 1.4.3) check multiple status codes
+
+Unsecure connections must be redirected to the secure one (https://www.bienenfuettern.de). Domain without beginning www must be redirected to the one with www. The secure connection must serve a 200 status code.
 
 ```
 user$ service-checker 46.163.114.68 -dn bienenfuettern.de -sc 301=https://www.bienenfuettern.de -ssc 301=https://www.bienenfuettern.de -dn www.bienenfuettern.de -sc 301=https://www.bienenfuettern.de -ssc 200
@@ -201,9 +222,9 @@ user$ service-checker 46.163.114.68 -dn bienenfuettern.de -sc 301=https://www.bi
 [2017-05-07 14:12:47] [PASSED]  [overall]                                    All checks passed.
 ```
 
-### 1.7) check ssl certificates
+### 1.5) ssl certificates
 
-### 1.8) ip, port, domain, status code and ssl check
+### 1.8) a combination of ip, port, domain, status code and ssl check
 
 Check ip 83.169.16.166; Ports 10022, 80 and 443 must be opened; Ports 3306 and 111 must be closed; inter.apo-ident.de and www.inter.apo-ident.de must be assigned to the ip; Unsecure connections must be redirected to the secure one (https://inter.apo-ident.de); Secure connections must serve a 200 status code; The certificates must be valid
 
