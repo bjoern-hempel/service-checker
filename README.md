@@ -1,6 +1,6 @@
 # service checker
 
-The service checker is a tool to do some server checks. It can check the server accessibility, opened and closed ports, dns settings, http status codes, ssl certificates, etc. It can send emails if any check is failed. With an environment file you can easily collect all server check configurations and use them as a cronjob task.
+The service checker is a tool to do some server checks. It can check the server accessibility, open and closed ports, dns settings, http status codes, ssl certificates, etc. It can send emails if any check is failed. With an environment file you can easily collect all server check configurations and use them as a cronjob task.
 
 ## A.) Installation
 
