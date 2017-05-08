@@ -45,7 +45,7 @@ Usage: service-checker [options...] <ip>
 
 ### A.3) Local installation with git (no root credentials needed)
 
-Use this local installation if you want to install this checker tool into your own wanted directory or you don't have root credentials.
+Use this local installation if you want to install this checker tool into your own wanted directory or you don't have root credentials. Don't remove this directory, because it won't be installed globally and you have to use the bin/checker script. ;)
 
 ```
 user$ mkdir ~/service-checker
