@@ -23,6 +23,8 @@ Usage: service-checker [options...] <ip>
 
 ### A.2) Global installation with git (root credentials needed)
 
+Check out the git repository to the wanted directory, do a global installation and remove the directory (if you don't need it anymore). For this kind of installation you need root credentials:
+
 ```
 user$ mkdir ~/service-checker
 user$ cd ~/service-checker
@@ -30,6 +32,11 @@ user$ git clone git://github.com/bjoern-hempel/service-checker.git .
 user$ sudo ./install -g
 user$ cd ..
 user$ rm -r service-checker
+```
+
+Now you can use the service-checker like this:
+
+```
 user$ service-checker --help
 
 Usage: service-checker [options...] <ip>
