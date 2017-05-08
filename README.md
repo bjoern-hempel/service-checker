@@ -45,7 +45,7 @@ Usage: service-checker [options...] <ip>
 
 ### A.3) Local installation with git (no root credentials needed)
 
-Use this local installation, if you want to install this checker tool into your own home directory or you don't have root credentials.
+Use this local installation if you want to install this checker tool into your own home directory or you don't have root credentials.
 
 ```
 user$ mkdir ~/service-checker
