@@ -1,5 +1,5 @@
 # friends of bash libs
-   friendsOfBashPathRemote="/opt/friends-of-bash"
+   friendsOfBashPathRemote="/opt/friends-of-bash/friends-of-bash"
 friendsOfBashIncludeRemote="$friendsOfBashPathRemote/lib/all"
     friendsOfBashPathLocal="$pathRoot/friends-of-bash"
  friendsOfBashIncludeLocal="$friendsOfBashPathLocal/lib/all"
