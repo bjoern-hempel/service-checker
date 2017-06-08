@@ -2,68 +2,32 @@
 
 The service checker is a tool to do some server checks. It can check the server accessibility, open and closed ports, dns settings, http status codes, ssl certificates, etc. It can send emails if any check is failed. With an environment file you can easily collect all server check configurations and use them as a cronjob task.
 
-## A.) Installation
+## A.) First usage
 
-### A.1) The simplest way
+### A.1) installation
 
-If you trust me, you can use this simple way to install the service-checker. Please have a look at https://www.ixno.de/service-checker/install before, if you want to know what this script makes.
-
-```
-user$ wget -O ~/sc-install -q https://www.ixno.de/service-checker/install && sudo bash ~/sc-install; rm -f ~/sc-install
-```
-
-Now you can use the service-checker like this:
+This application uses the friends of bash libraries (https://github.com/bjoern-hempel/friends-of-bash). Check that the libraries are available:
 
 ```
-user$ service-checker --help
-
-Usage: service-checker [options...] <ip>
-...
+user$ friends-of-bash --version
+friends-of-bash/v0.0.11
 ```
 
-### A.2) Global installation with git (root credentials needed)
-
-Check out the git repository to the wanted directory, do a global installation and remove the directory (if you don't need it anymore). For this kind of installation you need root credentials:
+If you can see a similar friends of bash version output like above, you can now install this application:
 
 ```
-user$ mkdir ~/service-checker
-user$ cd ~/service-checker
-user$ git clone git://github.com/bjoern-hempel/service-checker.git .
-user$ sudo ./install -g
-user$ cd ..
-user$ rm -r service-checker
+user$ sudo -E friends-of-bash install "git@github.com:bjoern-hempel/service-checker.git"
 ```
 
-Now you can use the service-checker like this:
+If you don't have installed the friends of bash libraries, please install them first. In short:
 
 ```
-user$ service-checker --help
-
-Usage: service-checker [options...] <ip>
-...
+user$ cd ~ && git clone git@github.com:bjoern-hempel/friends-of-bash.git && cd friends-of-bash
+user$ sudo -E bin/install
+user$ cd .. && rm -rf friends-of-bash
 ```
 
-### A.3) Local installation with git (no root credentials needed)
-
-Use this local installation if you want to install this checker tool into your own wanted directory or you don't have root credentials. Don't remove your directory, because it won't be installed globally and you have to use the bin/checker script. ;)
-
-```
-user$ mkdir ~/service-checker
-user$ cd ~/service-checker
-user$ git clone git://github.com/bjoern-hempel/service-checker.git .
-user$ ./install
-```
-
-Now you can use the service-checker like this:
-
-```
-user$ bin/checker --help
-
-Usage: bin/checker [options...] <ip>
-...
-```
-
-### A.4) Show help
+### A.2) installation Show the help dialog (`--help`)
 
 ```
 user$ service-checker --help
