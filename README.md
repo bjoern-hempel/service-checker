@@ -70,6 +70,13 @@ Usage: service-checker [options...] <ip>
  -cre-, --remove-credenial        Removes the current set webserver credentials.
  -ssl,  --check-ssl-certificate   Checks the ssl certificate. Needs a -dn option before.
 
+ -ahv,  --apache-host-viewer      With this option you indicate that the reviewed server has the apache-host-viewer extension
+                                  enabled or not. The apache-host-viewer is a self-diagnosis tool and gives you informations
+                                  directly from the reviewed server. See https://github.com/bjoern-hempel/apache-host-viewer
+                                  for more informations about that.
+ -ahc,  --apache-host-credenials  Sets the apache host viewer credentials to access to this service. This option need the
+                                  --apache-host-viewer option before.
+
  -em,   --email                   Email addresses (comma separated) from recipients of the success and failed mails.
  -fe,   --from-email              From email address (used for success and failed mails).
  -er,   --email-relay             Change the email relay strategy (direct, docker:[name]).
