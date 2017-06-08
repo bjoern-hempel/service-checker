@@ -21,6 +21,8 @@ timeOutEmailDelivery=1800 # half an hour
 identifier=""
 suppressDirectOutput=false
 pingEnabled=true
+apacheHostViewerEnabled=false
+apacheHostViewerCredentials=""
 
 # read arguments
 # help:
@@ -125,9 +127,42 @@ while [[ $# > 0 ]]; do
         -ssl)
             if [ "$currentDomain" == "" ]; then
                 log 'error' "Please specifiy the domain name (-dn) first, before use -ssl option."
+                setCachedValue "$INI_FILE" scriptIsRunning false
                 exit
             fi
             sslCheck+=("$currentDomain")
+            ;;
+
+        # help:  -ahv,  --apache-host-viewer      With this option you indicate that the reviewed server has the apache-host-viewer extension
+        # help:                                   enabled or not. The apache-host-viewer is a self-diagnosis tool and gives you informations
+        # help:                                   directly from the reviewed server. See https://github.com/bjoern-hempel/apache-host-viewer
+        # help:                                   for more informations about that.
+        -ahv|--apache-host-viewer)
+            apacheHostViewerEnabled=true
+            ;;
+        -ahv=*|--apache-host-viewer=*)
+            [ "${1#*=}" == "1" ] && apacheHostViewerEnabled=true || apacheHostViewerEnabled=false
+            ;;
+
+        # help:  -ahc,  --apache-host-credenials  Sets the apache host viewer credentials to access to this service. This option need the
+        # help:                                   --apache-host-viewer option before.
+        # help:
+        -ahc|--apache-host-credentials)
+            if ! $apacheHostViewerEnabled; then
+                log 'error' "Please enable the apache-host-viewer check (--apache-host-viewer) before using the --apache-host-credentials option."
+                setCachedValue "$INI_FILE" scriptIsRunning false
+                exit
+            fi
+            apacheHostViewerCredentials="$2"
+            shift
+            ;;
+        -ahc=*|--apache-host-credentials=*)
+            if ! $apacheHostViewerEnabled; then
+                log 'error' "Please enable the apache-host-viewer check (--apache-host-viewer) before using the --apache-host-credentials option."
+                setCachedValue "$INI_FILE" scriptIsRunning false
+                exit
+            fi
+            apacheHostViewerCredentials="${1#*=}"
             ;;
 
         # help:  -em,   --email                   Email addresses (comma separated) from recipients of the success and failed mails.

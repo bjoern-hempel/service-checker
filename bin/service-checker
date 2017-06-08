@@ -169,6 +169,15 @@ for domain in "${sslCheck[@]}"; do
     fi
 done
 
+# apache host viewer check
+if $apacheHostViewerEnabled; then
+    echo 'do an apache host viewer check'
+
+    if [ "$apacheHostViewerCredentials" != "" ]; then
+       echo "Credentials: $apacheHostViewerCredentials"
+    fi
+fi
+
 # print all check status
 if $allPassed; then
     exitType="passed"
