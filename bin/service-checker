@@ -171,10 +171,16 @@ done
 
 # apache host viewer check
 if $apacheHostViewerEnabled; then
-    echo 'do an apache host viewer check'
+    json=$(getApacheHostViewerJson "89.146.238.37" "server/index.json" "$apacheHostViewerCredentials")
 
-    if [ "$apacheHostViewerCredentials" != "" ]; then
-       echo "Credentials: $apacheHostViewerCredentials"
+       status=$(echo "$json" | jq -M -r '.status.overall')
+    updatedAt=$(echo "$json" | jq -M -r '.["created-at"]')
+
+    if [ "$status" != "error" ]; then
+        outputContent "ahv.status.overall" "passed" "The status from apache host viewer has passed ($status)."
+    else
+        outputContent "ahv.status.overall" "failed" "The status from apache host viewer has not passed ($status)."
+        allPassed=false
     fi
 fi
 
