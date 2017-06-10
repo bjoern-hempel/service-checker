@@ -141,7 +141,7 @@ for domain in "${sslCheck[@]}"; do
 
     # get and save the issuer certificate
     certChain=$(getChainCertificate "$domain")
-  
+
     if [ "$certChain" == "" ]; then
         outputContent "domains.${domain}.certificate" "failed" "No chain certificate returned."
         allPassed=false
@@ -171,7 +171,7 @@ done
 
 # apache host viewer check
 if $apacheHostViewerEnabled; then
-    if ! isAhvCheck "89.146.238.37" "server/index.json" "$apacheHostViewerCredentials"; then
+    if ! isAhvCheck "$ip" "server/index.json" "$apacheHostViewerCredentials"; then
         allPassed=false
     fi
 fi
