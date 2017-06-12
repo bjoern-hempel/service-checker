@@ -149,21 +149,21 @@ for domain in "${sslCheck[@]}"; do
         echo "$certChain" > "$chainfile"
 
         # check the certificates
-        if ! isCertificateVerified "$certFile" "$chainfile" "$domain"; then
+        if ! isCertificateVerified "$certFile" "$chainfile" "$domain" true; then
             allPassed=false
         fi
-        if ! isChainCertificateVerified "$chainfile" "$issuer" "$domain"; then
+        if ! isChainCertificateVerified "$chainfile" "$issuer" "$domain" true; then
             allPassed=false
         fi
-        if ! isCertificateValid "$certFile" "$domain"; then
+        if ! isCertificateValid "$certFile" "$domain" 14 true; then
             allPassed=false
         fi
-        if ! isDomainFromCertificate "$domain" "$certFile"; then
+        if ! isDomainFromCertificate "$domain" "$certFile" true; then
             allPassed=false
         fi
 
         # gets the status
-        if ! isStatusOcspOk "$domain" "$chainfile" "$certFile"; then
+        if ! isStatusOcspOk "$domain" "$chainfile" "$certFile" true; then
             allPassed=false
         fi
     fi
