@@ -119,8 +119,8 @@ done
 
 # status code check
 statusCodeCounter=0
-for url in "${!statusCodeCheck[@]}"; do
-    ports="${statusCodeCheck[$url]}"
+for url in "${statusCodeCheckUrls[@]}"; do
+    ports="${statusCodeCheckContent[$url]}"
 
     if ! isHttpStatusCodeCheck "$url" "$ports"; then
         allPassed=false

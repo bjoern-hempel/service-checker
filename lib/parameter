@@ -5,9 +5,10 @@ ip=''
 portsPositive=()
 portsNegative=()
 sslCheck=()
+statusCodeCheckUrls=()
 declare -A aRecords
 declare -A mxRecords
-declare -A statusCodeCheck
+declare -A statusCodeCheckContent
 
 # declare parameter list array
 PARAMETERS=()
@@ -63,12 +64,18 @@ while [[ $# > 0 ]]; do
         # help:
         -sc|--status-code)
             read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "$2")
-            statusCodeCheck["$url"]="$ports"
+            if [ -z ${statusCodeCheckContent["$url"]} ]; then
+                statusCodeCheckUrls+=("$url")
+                statusCodeCheckContent["$url"]="$ports"
+            fi
             shift
             ;;
         -sc=*|--status-code=*)
             read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "${1#*=}")
-            statusCodeCheck["$url"]="$ports"
+            if [ -z ${statusCodeCheckContent["$url"]} ]; then
+                statusCodeCheckUrls+=("$url")
+                statusCodeCheckContent["$url"]="$ports"
+            fi
             ;;
 
         # help:  -ssc,  --secure-status-code      Checks that a given url returns an expected status code (https:443). Needs a -dn option before.
@@ -89,12 +96,18 @@ while [[ $# > 0 ]]; do
         # help:
         -ssc|--secure-status-code)
             read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "$2")
-            statusCodeCheck["$url"]="$ports"
+            if [ -z ${statusCodeCheckContent["$url"]} ]; then
+                statusCodeCheckUrls+=("$url")
+                statusCodeCheckContent["$url"]="$ports"
+            fi
             shift
             ;;
         -ssc=*|--secure-status-code=*)
             read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "${1#*=}")
-            statusCodeCheck["$url"]="$ports"
+            if [ -z ${statusCodeCheckContent["$url"]} ]; then
+                statusCodeCheckUrls+=("$url")
+                statusCodeCheckContent["$url"]="$ports"
+            fi
             ;;
 
         # help:  -dn,   --set-domainname          Sets the current domain name. With this set domain name other commands can be combined.
