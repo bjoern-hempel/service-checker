@@ -19,6 +19,14 @@ fi
 source "$pathRoot/lib/fobDetection"
 source "$pathRoot/lib/functions"
 
+# check installed friends of library apps
+message=$(checkCurrentVersionNumbers "$pathRoot/.require")
+lastStatus=$?
+if [ $lastStatus -gt 0 ]; then
+    echo "$message Abort.."
+    exit 1
+fi
+
 # date (log file usage)
 dateFile=$(date +%Y-%m-%d_%H%M%S)
 
@@ -87,93 +95,26 @@ fi
 # some other used vars
 allPassed=true
 
-# check if server is running
-if $pingEnabled; then
-    if isPingableCheck "$ip"; then
-        pingable=true
-    else
-        allPassed=false
-    fi
+# check for allowed systems
+thisSystemIsAllowed=false
+if [ "$allowedTestSystems" != "" ]; then
+    ownIpAdress=$(getIpAddress)
+
+    IFS=',' read -ra allowedIpAdresses <<< "$allowedTestSystems"
+    for allowedIpAdress in "${allowedIpAdresses[@]}"; do
+        if [ "$ownIpAdress" == "$allowedIpAdress" ]; then
+            thisSystemIsAllowed=true
+        fi
+    done
+else
+    thisSystemIsAllowed=true
 fi
 
-# check positive ports
-for port in "${portsPositive[@]}"; do
-    if ! isPortOpenCheck "$ip" "$port"; then
-        allPassed=false
-    fi
-done
-
-# check negative ports
-for port in "${portsNegative[@]}"; do
-    if ! isNotPortOpenCheck "$ip" "$port"; then
-        allPassed=false
-    fi
-done
-
-# a record check
-for domain in "${!aRecords[@]}"; do
-    if ! isDomainAssignedToIpCheck "$domain" "$ip" true; then
-        allPassed=false
-    fi
-done
-
-# status code check
-statusCodeCounter=0
-for url in "${statusCodeCheckUrls[@]}"; do
-    ports="${statusCodeCheckContent[$url]}"
-
-    if ! isHttpStatusCodeCheck "$url" "$ports"; then
-        allPassed=false
-    fi
-done
-
-# ssl check
-for domain in "${sslCheck[@]}"; do
-    certFile="/tmp/$domain.crt"
-    chainfile="/tmp/$domain.ca"
-
-    # get and save domain cert
-    cert=$(getDomainCert "$domain")
-    echo "$cert" > "$certFile"
-
-    # get the issuer from domain cert
-    issuer=$(getIssuer "$domain")
-
-    # get and save the issuer certificate
-    certChain=$(getChainCertificate "$domain")
-
-    if [ "$certChain" == "" ]; then
-        outputContent "domains.${domain}.certificate" "failed" "No chain certificate returned."
-        allPassed=false
-    else
-        echo "$certChain" > "$chainfile"
-
-        # check the certificates
-        if ! isCertificateVerified "$certFile" "$chainfile" "$domain" true; then
-            allPassed=false
-        fi
-        if ! isChainCertificateVerified "$chainfile" "$issuer" "$domain" true; then
-            allPassed=false
-        fi
-        if ! isCertificateValid "$certFile" "$domain" 14 true; then
-            allPassed=false
-        fi
-        if ! isDomainFromCertificate "$domain" "$certFile" true; then
-            allPassed=false
-        fi
-
-        # gets the status
-        if ! isStatusOcspOk "$domain" "$chainfile" "$certFile" true; then
-            allPassed=false
-        fi
-    fi
-done
-
-# apache host viewer check
-if $apacheHostViewerEnabled; then
-    if ! isAhvCheck "$ip" "server/index.json" "$apacheHostViewerCredentials"; then
-        allPassed=false
-    fi
+# execute checks if allowed
+if $thisSystemIsAllowed; then
+    source "$pathRoot/lib/checks"
+else
+    outputContent "overall" "warning" "This system with the ip $ownIpAdress is not part of the given ip range:\n$allowedTestSystems\n All checks are ignored."
 fi
 
 # print all check status

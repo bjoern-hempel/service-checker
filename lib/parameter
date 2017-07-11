@@ -24,6 +24,7 @@ suppressDirectOutput=false
 pingEnabled=true
 apacheHostViewerEnabled=false
 apacheHostViewerCredentials=""
+allowedTestSystems=""
 
 # read arguments
 # help:
@@ -232,7 +233,8 @@ while [[ $# > 0 ]]; do
             shift
             ;;
 
-        # help:  -id,   --identifier              An optional identifier which will be used for some information channels like email, etc. (if not given it uses the ip address)
+        # help:  -id,   --identifier              An optional identifier which will be used for some information channels like email,
+        # help:                                   etc. (if not given it uses the ip address)
         # help:
         -id|--identifier)
             identifier="$2"
@@ -246,6 +248,17 @@ while [[ $# > 0 ]]; do
         # help:
         -dp|--disable-ping)
             pingEnabled=false
+            ;;
+
+        # help:  -ats,  --allowed-test-systems    Adds a range of system ips (cvs) of allowed test systems. This parameter is useful if the service-checker
+        # help:                                   is used on multiple systems, but only one or a few of the server are allowed to test the given configuration.
+        # help:
+        -ats|--allowed-test-systems)
+            allowedTestSystems="$2"
+            shift
+            ;;
+        -ats=*|--allowed-test-systems=*)
+            allowedTestSystems="${1#*=}"
             ;;
 
         # help:  -sdo,  --suppress-direct-output  1 - Suppress all directly printed outputs to screen (excluding log outputs, etc.); 0 - Don't suppress
