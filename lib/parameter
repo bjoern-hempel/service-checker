@@ -9,11 +9,11 @@ statusCodeCheckUrls=()
 declare -A aRecords
 declare -A mxRecords
 declare -A statusCodeCheckContent
+declare currentDomains
 
 # declare parameter list array
 PARAMETERS=()
 
-currentDomain=""
 currentCredentials=""
 emailAddress=""
 fromEmailAddress=""
@@ -64,19 +64,23 @@ while [[ $# > 0 ]]; do
         # help:         -sc >/redirect/home.html                          http://(domain.tld)                           301 with target http://$1/redirect/home.html
         # help:
         -sc|--status-code)
-            read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "$2")
-            if [ -z ${statusCodeCheckContent["$url"]} ]; then
-                statusCodeCheckUrls+=("$url")
-                statusCodeCheckContent["$url"]="$ports"
-            fi
+            for currentDomain in "${currentDomains[@]}"; do
+                read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "$2")
+                if [ -z ${statusCodeCheckContent["$url"]} ]; then
+                    statusCodeCheckUrls+=("$url")
+                    statusCodeCheckContent["$url"]="$ports"
+                fi
+            done
             shift
             ;;
         -sc=*|--status-code=*)
-            read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "${1#*=}")
-            if [ -z ${statusCodeCheckContent["$url"]} ]; then
-                statusCodeCheckUrls+=("$url")
-                statusCodeCheckContent["$url"]="$ports"
-            fi
+            for currentDomain in "${currentDomains[@]}"; do
+                read url ports < <(getUrlAndPorts "http://$currentCredentials$currentDomain" "${1#*=}")
+                if [ -z ${statusCodeCheckContent["$url"]} ]; then
+                    statusCodeCheckUrls+=("$url")
+                    statusCodeCheckContent["$url"]="$ports"
+                fi
+            done
             ;;
 
         # help:  -ssc,  --secure-status-code      Checks that a given url returns an expected status code (https:443). Needs a -dn option before.
@@ -96,30 +100,38 @@ while [[ $# > 0 ]]; do
         # help:         -ssc 404,401,301=https://typo3.domain.tld:/typo3  https://domain.tld/typo3                      404 or 401 or 301 with target https://typo3.domain.tld
         # help:
         -ssc|--secure-status-code)
-            read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "$2")
-            if [ -z ${statusCodeCheckContent["$url"]} ]; then
-                statusCodeCheckUrls+=("$url")
-                statusCodeCheckContent["$url"]="$ports"
-            fi
+            for currentDomain in "${currentDomains[@]}"; do
+                read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "$2")
+                if [ -z ${statusCodeCheckContent["$url"]} ]; then
+                    statusCodeCheckUrls+=("$url")
+                    statusCodeCheckContent["$url"]="$ports"
+                fi
+            done
             shift
             ;;
         -ssc=*|--secure-status-code=*)
-            read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "${1#*=}")
-            if [ -z ${statusCodeCheckContent["$url"]} ]; then
-                statusCodeCheckUrls+=("$url")
-                statusCodeCheckContent["$url"]="$ports"
-            fi
+            for currentDomain in "${currentDomains[@]}"; do
+                read url ports < <(getUrlAndPorts "https://$currentCredentials$currentDomain" "${1#*=}")
+                if [ -z ${statusCodeCheckContent["$url"]} ]; then
+                    statusCodeCheckUrls+=("$url")
+                    statusCodeCheckContent["$url"]="$ports"
+                fi
+            done
             ;;
 
         # help:  -dn,   --set-domainname          Sets the current domain name. With this set domain name other commands can be combined.
         -dn|--domainname)
-            currentDomain="$2"
-            aRecords[$currentDomain]=true
+            IFS=',' read -r -a currentDomains <<< "$2"
+            for currentDomain in "${currentDomains[@]}"; do
+                aRecords[$currentDomain]=true
+            done
             shift
             ;;
         -dn=*|--domainname=*)
-            currentDomain="${1#*=}"
-            aRecords[$currentDomain]=true
+            IFS=',' read -r -a currentDomains <<< "${1#*=}"
+            for currentDomain in "${currentDomains[@]}"; do
+                aRecords[$currentDomain]=true
+            done
             ;;
 
         # help:  -cre,  --set-credenial           Sets the current webserver credentials. With this set credentials other commands can be combined.
@@ -139,12 +151,14 @@ while [[ $# > 0 ]]; do
         # help:  -ssl,  --check-ssl-certificate   Checks the ssl certificate. Needs a -dn option before.
         # help:
         -ssl)
-            if [ "$currentDomain" == "" ]; then
+            if [ ${#currentDomains[@]} -le 0 ]; then
                 log 'error' "Please specifiy the domain name (-dn) first, before use -ssl option."
                 setCachedValue "$INI_FILE" scriptIsRunning false
                 exit
             fi
-            sslCheck+=("$currentDomain")
+            for currentDomain in "${currentDomains[@]}"; do
+                sslCheck+=("$currentDomain")
+            done
             ;;
 
         # help:  -ahv,  --apache-host-viewer      With this option you indicate that the reviewed server has the apache-host-viewer extension
