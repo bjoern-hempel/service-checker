@@ -119,7 +119,8 @@ while [[ $# > 0 ]]; do
             done
             ;;
 
-        # help:  -dn,   --set-domainname          Sets the current domain name. With this set domain name other commands can be combined.
+        # help:  -dn,   --set-domainname          Sets the current domain name or a list of current domain names.
+        # help:                                   Some other parameter use this parameter as requirement: like -ssl, etc.
         -dn|--domainname)
             IFS=',' read -r -a currentDomains <<< "$2"
             for currentDomain in "${currentDomains[@]}"; do
