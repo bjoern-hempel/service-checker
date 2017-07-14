@@ -65,7 +65,8 @@ Usage: service-checker [options...] <ip>
         -ssc 404,401:/typo3                               https://domain.tld/typo3                      404 or 401
         -ssc 404,401,301=https://typo3.domain.tld:/typo3  https://domain.tld/typo3                      404 or 401 or 301 with target https://typo3.domain.tld
 
- -dn,   --set-domainname          Sets the current domain name. With this set domain name other commands can be combined.
+ -dn,   --set-domainname          Sets the current domain name or a list of current domain names.
+                                  Some other parameter use this parameter as requirement: like -ssl, etc.
  -cre,  --set-credenial           Sets the current webserver credentials. With this set credentials other commands can be combined.
  -cre-, --remove-credenial        Removes the current set webserver credentials.
  -ssl,  --check-ssl-certificate   Checks the ssl certificate. Needs a -dn option before.
@@ -83,9 +84,13 @@ Usage: service-checker [options...] <ip>
  -to,   --time-out                Time out for email delivery (avoid mass email delivery)
  -json, --json-file               Adds the json log output.
  -log,  --log-file                Adds the log output.
- -id,   --identifier              An optional identifier which will be used for some information channels like email, etc. (if not given it uses the ip address)
+ -id,   --identifier              An optional identifier which will be used for some information channels like email,
+                                  etc. (if not given it uses the ip address)
 
  -dp,   --disable-ping            Disable the ping check.
+
+ -ats,  --allowed-test-systems    Adds a range of system ips (cvs) of allowed test systems. This parameter is useful if the service-checker
+                                  is used on multiple systems, but only one or a few of the server are allowed to test the given configuration.
 
  -sdo,  --suppress-direct-output  1 - Suppress all directly printed outputs to screen (excluding log outputs, etc.); 0 - Don't suppress
 
