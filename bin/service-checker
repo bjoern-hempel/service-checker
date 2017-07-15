@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# trap ctrl-c and call ctrl_c()
+trap ctrlC INT
+
+# trap ctrl-c function
+function ctrlC()
+{
+    echo && log 'info' "Script was cancelled by user (ctrl-c)."
+    setCachedValue "$INI_FILE" scriptIsRunning false
+    exit 0
+}
+
 # include the libraries
 if [ -h "${BASH_SOURCE[0]}" ]; then
     filename=$(readlink "${BASH_SOURCE[0]}")
