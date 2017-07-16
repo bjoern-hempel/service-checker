@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# author settings
+AUTHOR="Björn Hempel"
+EMAIL="bjoern@hempel.li"
+
 # initial values
 ip=''
 portsPositive=()
@@ -27,6 +31,8 @@ apacheHostViewerCredentials=""
 allowedTestSystems=""
 
 # read arguments
+# help:
+# help: service-checker: A service checker (%version%) by %author% <%email%>.
 # help:
 # help: Usage: %scriptname% [options...] <ip>
 while [[ $# > 0 ]]; do
@@ -289,7 +295,12 @@ while [[ $# > 0 ]]; do
         # help:  -h,    --help                    Shows this help.
         # help:
         -h|--help)
-            cat "$pathRoot/lib/parameter" | grep "# help:" | grep -v 'cat parameter' | sed 's/[ ]*# help:[ ]\?//g' | sed "s~%scriptname%~$scriptname~g"
+            version=$(getRepositoryVersion "$pathRoot" true)
+            cat "$BASH_SOURCE" | grep "# help:" | grep -v 'cat parameter' | sed 's/[ ]*# help:[ ]\?//g' | \
+                sed "s~%scriptname%~$scriptname~g" | \
+                sed "s~%version%~$version~g" | \
+                sed "s~%author%~$AUTHOR~g" | \
+                sed "s~%email%~$EMAIL~g"
             setCachedValue "$INI_FILE" scriptIsRunning false
             exit 0
             ;;

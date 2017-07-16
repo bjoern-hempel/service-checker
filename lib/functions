@@ -11,7 +11,7 @@ environmentLoader()
     shift
 
     # parse parameter
-    source "$pathRoot/lib/parameter"
+    source "$pathRoot/lib/arguments"
 
     local environmentFunction=''
 

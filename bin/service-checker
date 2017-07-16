@@ -124,7 +124,7 @@ if ! $suppressDirectOutput; then
 fi
 
 # include other libraries
-source "$pathRoot/lib/parameter"
+source "$pathRoot/lib/arguments"
 
 if [ "$emailAddress" != "" ]; then
     setOutputContentType "log:>${TMP_CONTENT_LOG_FILE}"
