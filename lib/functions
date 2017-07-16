@@ -72,7 +72,7 @@ environmentLoader()
 
         # build header
         environmentList+=$(printf "$lineTemplate" 'No' 'Name' 'IP')"\n"
-        environmentList+=$(printf "%48s" | tr " " "-")"\n"
+        environmentList+=$(printf "%48s" | tr " " "=")"\n"
 
         # all function
         environment.all() {
@@ -87,7 +87,6 @@ environmentLoader()
         # collect all environments
         for environmentFunction in "${environmentFunctions[@]}"; do
             $environmentFunction
-            ((counter++))
 
             # build version number
             [ "$counter" -lt 10 ] && versionNumber=$counter || versionNumber=$(chr $((87 + counter)))
@@ -99,6 +98,10 @@ environmentLoader()
             keyToEnvironment[$versionNumber]="$environmentFunction"
 
             environmentList+=$(printf "$lineTemplate" "${COLOR_UNDERLINE}$versionNumber${COLOR_NORM})" $name $ip)"\n"
+
+            [ $(expr $counter % 5) -eq 0 ] && environmentList+=$(printf "%48s" | tr " " "-")"\n"
+
+            ((counter++))
         done
 
         # read the input
