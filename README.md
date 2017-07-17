@@ -32,6 +32,8 @@ user$ cd .. && rm -rf friends-of-bash
 ```
 user$ service-checker --help
 
+service-checker: A service checker (v0.0.15) by Björn Hempel <bjoern@hempel.li>.
+
 Usage: service-checker [options...] <ip>
  -p+,
  -pp,   --port-positive           Checks that this given port is opened on the given machine.
