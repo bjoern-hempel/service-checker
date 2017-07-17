@@ -35,8 +35,9 @@
 # @copyright Written by Björn Hempel <bjoern@hempel.li>.
 # ------------
 
-# trap ctrl-c and call ctrl_c()
+# trap ctrl-c and exit
 trap ctrlC INT
+trap finish EXIT
 
 # trap ctrl-c function
 function ctrlC()
@@ -44,6 +45,12 @@ function ctrlC()
     echo && log 'info' "Script was cancelled by user (ctrl-c)."
     setCachedValue "$INI_FILE" scriptIsRunning false
     exit 0
+}
+
+# trap exit function
+function finish()
+{
+    setCachedValue "$INI_FILE" scriptIsRunning false
 }
 
 # include the libraries
