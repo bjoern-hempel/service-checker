@@ -167,7 +167,7 @@ fi
 if $thisSystemIsAllowed; then
     source "$pathRoot/lib/checks"
 else
-    outputContent "overall" "warning" "This system with the ip $ownIpAdress is not part of the given ip range:\n$allowedTestSystems\n All checks are ignored."
+    outputContent "ip-check" "warning" "This system with the ip $ownIpAdress is not part of the given ip range:\n$allowedTestSystems\n All checks are ignored."
 fi
 
 # print all check status
